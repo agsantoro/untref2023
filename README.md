@@ -17,7 +17,7 @@
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
 
 <!-- Contenido -->
-# Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.(#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
+# Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.
 
 Cupo: 30
 
@@ -29,7 +29,7 @@ DOCENTES: Adrián Santoro / Velén Pennini
 
 El curso está orientado a profesionales de diferentes disciplinas que se interesen o trabajen con estadísticas o ciencia de datos y que cuenten con conocimientos básicos o intermedios de R. No es requisito el conocimiento previo de las fuentes específicas de datos de salud.
 
-## Requerimientos mínimos necesarios para este curso: {#requerimientos-mínimos-necesarios-para-este-curso}
+## Requerimientos mínimos necesarios para este curso: 
 
 - Computadora con R y RStudio instalado y con permisos para instalar paquetes nuevos.
 - Conocimientos básicos de manejo de bases de datos.
