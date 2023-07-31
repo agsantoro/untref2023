@@ -7,7 +7,6 @@ output:
     toc: yes
     toc_float:
       collapsed: false
-link-citations: true
 theme: united
 ---
 
@@ -95,7 +94,8 @@ Indique a RStudio dónde encontrar la instalación de Git. Para ello sigue los s
 
 ### 4. Configure Git: 
 
-    En la consola de RStudio escribir
+En la consola de RStudio escribir
+
 ```{r, eval=F, echo=T}
 library(usethis)
 edit_git_config()
@@ -109,7 +109,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 ### 5. Crear un repositorio propio en GitHub
 
-    1. Ingresar a la página de GitHub y crear un repositorio nuevo que se llame “curso_shiny_sunombre” agregandole su nombre al final. Al hacer clic en “new” se abrirá una pantalla como la que está a continuación.
+1. Ingresar a la página de GitHub y crear un repositorio nuevo que se llame “curso_shiny_sunombre” agregandole su nombre al final. Al hacer clic en “new” se abrirá una pantalla como la que está a continuación.
 
     
 ![](images/image_8.png "image_tooltip")
@@ -117,7 +117,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 ![](images/image_9.png "image_tooltip")
 
 
-    2. Ahora, ingrese al repositorio y copie el enlace, tal como se muestra en la captura.
+2. Ahora, ingrese al repositorio y copie el enlace, tal como se muestra en la captura.
 
         
 ![](images/image_10.png "image_tooltip")
@@ -126,13 +126,13 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 ### 6. Clonar un repositorio, o conectar un proyecto con un repositorio GitHub
 1. Ir al repositorio que desea clonar. En este caso, el del curso es: 
 
-        [https://github.com/velenp/curso_shiny](https://github.com/velenp/curso_shiny)
+[https://github.com/velenp/curso_shiny](https://github.com/velenp/curso_shiny)
 
 
-        Haga clic en el botón verde que dice “code” y se desplegará una ventana, donde puede copiar el enlace del repositorio, o también puede descargar el .ZIP. En este caso vamos a descargar el .ZIP. Si usted desea conectarse para trabajar colaborativamente con ese repositorio puede copiar el enlace y clonarlo desde RStudio. Hay que tener en cuenta que para que esto sea posible el repositorio debe estar compartido con su usuario, de lo contrario no podrá trabajar colaborativamente. 
+Haga clic en el botón verde que dice “code” y se desplegará una ventana, donde puede copiar el enlace del repositorio, o también puede descargar el .ZIP. En este caso vamos a descargar el .ZIP. Si usted desea conectarse para trabajar colaborativamente con ese repositorio puede copiar el enlace y clonarlo desde RStudio. Hay que tener en cuenta que para que esto sea posible el repositorio debe estar compartido con su usuario, de lo contrario no podrá trabajar colaborativamente. 
 
 
-        En este caso, lo que vamos a hacer es clonar el repositorio vacío que ustedes crearon y a ese repositorio del que ustedes son propietarios subirles los materiales que se descargaron desde aquí en un .ZIP.
+En este caso, lo que vamos a hacer es clonar el repositorio vacío que ustedes crearon y a ese repositorio del que ustedes son propietarios subirles los materiales que se descargaron desde aquí en un .ZIP.
 
 
         
@@ -145,22 +145,13 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
         
 ![](images/image_12.png "image_tooltip")
 
+Seleccione la opción GIT
 
-
-    Seleccione la opción GIT
-
-
-        
 ![](images/image_13.png "image_tooltip")
-
-
-
-    Ingrese la URL del repositorio que tiene su nombre, que crearon en el paso 5, seleccione la carpeta donde lo quiere alojar y ponga crear proyecto.
-
+Ingrese la URL del repositorio que tiene su nombre, que crearon en el paso 5, seleccione la carpeta donde lo quiere alojar y ponga crear proyecto.
 
         
 ![](images/image_14.png "image_tooltip")
-
 
 ### 7. Agregar archivos a su repositorio y realizar un commit
 
@@ -173,6 +164,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 
 3. Estos archivos se encuentran guardados localmente. Si quieren subirlos a su repositorio de GitHub deberán hacer un “commit” y luego “Push”. Veamos el paso a paso:
+
 4. Hacer clic en “Commit”, y verán que se despliega una ventana como la presentada a continuación. Allí, tildar todos los archivos tal como se ve en la captura. Donde dice “commit message” poner un mensaje que identifique a este commit, como por ejemplo “primer commit”. y por último hacer clic en “commit” que se muestra en la figura señalada en rojo.
 
         
@@ -186,6 +178,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 
 6. Ahora, si ingresan al repositorio desde la página de GitHub verán que contiene los archivos que subieron. Cada vez que modifique alguno de estos archivos o agreguen un archivo nuevo deberán repetir el proceso de “Commit” y luego “Push” para actualizar su repositorio de GitHub. El texto que pongan en “commit message” será una referencia al momento de revisar el historial de cambios que tuvo el repositorio.
+
 7. En caso que estén trabajando con un repositorio de forma colaborativa, con otras personas, es necesario, que antes de realizar cada “commit” y “push” presionen el botón de la flecha celeste hacia abajo que dice “Pull”. De este modo podrán incorporar los cambios que realizó otro colaborador en su proyecto. Es importante realizar el “Pull” antes que el “Push” para evitar conflictos entre versiones.  Si varios colaboradores están trabajando en el mismo proyecto y realizan cambios en la misma parte del código, un "pull request" permite resolver posibles conflictos antes de que se mezclen los cambios. Esto evita que los cambios se fusionen con conflictos no resueltos, lo que podría llevar a errores en el código.
 
 
