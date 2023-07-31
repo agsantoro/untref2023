@@ -6,12 +6,12 @@ output:
     theme: cosmo
     toc: yes
     toc_float:
-      collapsed: true
+      collapsed: false
 link-citations: true
 theme: united
 ---
 
-![alt_text](images/image_1.png "image_tooltip")
+![](images/image_1.png "image_tooltip")
 
 # Curso: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud -  UNTREF
 
@@ -25,15 +25,15 @@ Instalación de RStudio: Se instala un entorno de desarrollo integrado (IDE) que
 Para instalar R ingresa [aca](https://cloud.r-project.org/) y sigue las instrucciones:
 
 
-![alt_text](images/image_2.png "image_tooltip")
+![](images/image_2.png "image_tooltip")
 
 
 
-![alt_text](images/image_3.png "image_tooltip")
+![](images/image_3.png "image_tooltip")
 
 
 
-![alt_text](images/image_4.png "image_tooltip")
+![](images/image_4.png "image_tooltip")
 
 
 Una vez instalado R, pueden instalar RStudio:
@@ -43,7 +43,7 @@ RStudio es un entorno integrado de desarrollo (IDE por sus siglas en inglés). S
 Ingresar al sitio oficial de [RStudio](https://rstudio.com/products/rstudio/download/), descargar e instalar el programa. 
 
 
-![alt_text](images/image_5.png "image_tooltip")
+![](images/image_5.png "image_tooltip")
 
 
 
@@ -90,7 +90,7 @@ Indique a RStudio dónde encontrar la instalación de Git. Para ello sigue los s
 4. Reinicie RStudio. Si funcionó, encontrará el icono de Git en la barra de herramientas superior, como se muestra a continuación.
 
     
-![alt_text](images/image_6.png "image_tooltip")
+![](images/image_6.png "image_tooltip")
 
 
 ### 4. Configure Git: 
@@ -104,7 +104,7 @@ edit_git_config()
 Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán completar los campos _name_ y _email_ tal como se ve en la figura y guardar. 
 
 
-![alt_text](images/image_7.png "image_tooltip")
+![](images/image_7.png "image_tooltip")
  
 
 ### 5. Crear un repositorio propio en GitHub
@@ -112,15 +112,15 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
     1. Ingresar a la página de GitHub y crear un repositorio nuevo que se llame “curso_shiny_sunombre” agregandole su nombre al final. Al hacer clic en “new” se abrirá una pantalla como la que está a continuación.
 
     
-![alt_text](images/image_8.png "image_tooltip")
+![](images/image_8.png "image_tooltip")
 
-![alt_text](images/image_9.png "image_tooltip")
+![](images/image_9.png "image_tooltip")
 
 
     2. Ahora, ingrese al repositorio y copie el enlace, tal como se muestra en la captura.
 
         
-![alt_text](images/image_10.png "image_tooltip")
+![](images/image_10.png "image_tooltip")
 
 
 ### 6. Clonar un repositorio, o conectar un proyecto con un repositorio GitHub
@@ -136,14 +136,14 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 
         
-![alt_text](images/image_11.png "image_tooltip")
+![](images/image_11.png "image_tooltip")
 
 
 2. En RStudio, en el margen superior derecho, ir a “nuevo proyecto” o “New Project”.
 3. En la pantalla que se abre seleccione la opción “Versión Control” tal como se ve en la captura a continuación.
 
         
-![alt_text](images/image_12.png "image_tooltip")
+![](images/image_12.png "image_tooltip")
 
 
 
@@ -151,7 +151,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 
         
-![alt_text](images/image_13.png "image_tooltip")
+![](images/image_13.png "image_tooltip")
 
 
 
@@ -159,7 +159,7 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 
         
-![alt_text](images/image_14.png "image_tooltip")
+![](images/image_14.png "image_tooltip")
 
 
 ### 7. Agregar archivos a su repositorio y realizar un commit
@@ -169,20 +169,20 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 2. Si vuelve a RStudio, verán en la ventada GIT, que se encuentra como solapa en el mismo espacio que el Environment, todos estos archivos nuevos agregados. 
 
         
-![alt_text](images/image_15.png "image_tooltip")
+![](images/image_15.png "image_tooltip")
 
 
 3. Estos archivos se encuentran guardados localmente. Si quieren subirlos a su repositorio de GitHub deberán hacer un “commit” y luego “Push”. Veamos el paso a paso:
 4. Hacer clic en “Commit”, y verán que se despliega una ventana como la presentada a continuación. Allí, tildar todos los archivos tal como se ve en la captura. Donde dice “commit message” poner un mensaje que identifique a este commit, como por ejemplo “primer commit”. y por último hacer clic en “commit” que se muestra en la figura señalada en rojo.
 
         
-![alt_text](images/image_16.png "image_tooltip")
+![](images/image_16.png "image_tooltip")
 
 
 5. Aparecerá una ventana negra con el detalle de la tarea realizada. Cerrar esa ventana y hacer clic en el botón de “push” con una flecha verde hacia arriba, tal como se muestra en la captura.
 
         
-![alt_text](images/image_17.png "image_tooltip")
+![](images/image_17.png "image_tooltip")
 
 
 6. Ahora, si ingresan al repositorio desde la página de GitHub verán que contiene los archivos que subieron. Cada vez que modifique alguno de estos archivos o agreguen un archivo nuevo deberán repetir el proceso de “Commit” y luego “Push” para actualizar su repositorio de GitHub. El texto que pongan en “commit message” será una referencia al momento de revisar el historial de cambios que tuvo el repositorio.
