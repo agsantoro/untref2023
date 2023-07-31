@@ -72,9 +72,10 @@ Importación y manipulación de datos de salud y epidemiología. Preparación de
 Opciones de despliegue de aplicaciones Shiny. Configuración de una cuenta en shiny
 
 ## METODOLOGÍA
-
+El curso se desarrollará de manera virtual y sincrónica. Se abordarán los contenidos de forma práctica con el propósito de reproducir las diferentes fases en el desarrollo de una visualización interactiva de datos (acceso a la información, procesamiento, análisis, visualización, despliegue).
 
 ## REQUISITOS PARA LA APROBACIÓN DE LA MATERIA
-
 ### EVALUACIÓN
+Para la aprobación de la asignatura es necesario cumplimentar el 80% de asistencia a las actividades sincrónicas, tener aprobados todos los Trabajos Prácticos y una evaluación final.
 ### ASISTENCIA A CLASES
+El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
