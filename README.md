@@ -2,7 +2,7 @@
 
 # Índice
 
-1. [Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.](https://github.com/agsantoro/untref2023/tree/main#programa-introducci%C3%B3n-al-procesamiento-an%C3%A1lisis-y-visualizaci%C3%B3n-interactiva-de-datos-abiertos-en-salud)
+1. [Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.](#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
 2. [Requerimientos mínimos necesarios para este curso:](#requerimientos-mínimos-necesarios-para-este-curso)
 3. [OBJETIVOS:](#objetivos)
 4. [CONTENIDOS](#contenidos)
@@ -28,7 +28,7 @@ DOCENTES: Adrián Santoro / Velén Pennini
 
 El curso está orientado a profesionales de diferentes disciplinas que se interesen o trabajen con estadísticas o ciencia de datos y que cuenten con conocimientos básicos o intermedios de R. No es requisito el conocimiento previo de las fuentes específicas de datos de salud.
 
-## Requerimientos mínimos necesarios para este curso: {##requerimientos-mínimos-necesarios-para-este-curso}
+## Requerimientos mínimos necesarios para este curso: {#requerimientos-mínimos-necesarios-para-este-curso}
 
 - Computadora con R y RStudio instalado y con permisos para instalar paquetes nuevos.
 - Conocimientos básicos de manejo de bases de datos.
