@@ -67,3 +67,11 @@ Importación y manipulación de datos de salud y epidemiología. Preparación de
 ### Unidad 5: Despliegue de la aplicación Shiny 
 
 Opciones de despliegue de aplicaciones Shiny. Configuración de una cuenta en shiny
+
+## METODOLOGÍA
+
+
+## REQUISITOS PARA LA APROBACIÓN DE LA MATERIA
+
+### EVALUACIÓN
+### ASISTENCIA A CLASES
