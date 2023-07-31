@@ -1,7 +1,7 @@
 # Contenido del repositorio
 
 
-[poblaciones]([RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html](https://agsantoro.github.io/untref2023/RMD/RMD01_Población/01_ProyeccionesDePoblacion.html))
+[poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Población/01_ProyeccionesDePoblacion.html)
 <!-- Índice -->
 # Programa del taller
 
