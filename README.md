@@ -1,5 +1,5 @@
 [poblaciones](RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
-
+<!-- Índice -->
 # Índice
 
 1. [Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.](#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
@@ -16,6 +16,7 @@
     - [EVALUACIÓN](#evaluación)
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
 
+<!-- Contenido -->
 # Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.(#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
 
 Cupo: 30
