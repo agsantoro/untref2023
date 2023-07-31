@@ -1,6 +1,9 @@
+# Contenido del repositorio
+
+
 [poblaciones](RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
 <!-- Índice -->
-# Índice
+# Programa del taller
 
 1. [Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.](#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
 2. [Requerimientos mínimos necesarios para este curso:](https://github.com/agsantoro/untref2023/blob/main/README.md#requerimientos-m%C3%ADnimos-necesarios-para-este-curso)
