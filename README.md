@@ -1,8 +1,8 @@
-# :frog:Contenido del repositorio 
+# Contenido del repositorio 
 
 [Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
 
-:school: [Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
+[Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
 
 <!---
 [Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
