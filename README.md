@@ -1,4 +1,4 @@
-# Contenido del repositorio :+1
+# Contenido del repositorio :+1:
 
 
 [Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
