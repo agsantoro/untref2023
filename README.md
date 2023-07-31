@@ -3,7 +3,7 @@
 # Índice
 
 1. [Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.](#programa-introducción-al-procesamiento-análisis-y-visualización-interactiva-de-datos-abiertos-en-salud)
-2. [Requerimientos mínimos necesarios para este curso:](#requerimientos-mínimos-necesarios-para-este-curso)
+2. [Requerimientos mínimos necesarios para este curso:](https://github.com/agsantoro/untref2023/blob/main/README.md#requerimientos-m%C3%ADnimos-necesarios-para-este-curso)
 3. [OBJETIVOS:](#objetivos)
 4. [CONTENIDOS](#contenidos)
     1. [Unidad 1: acceso y procesamiento de datos de salud con R.](#unidad-1-acceso-y-procesamiento-de-datos-de-salud-con-r)
