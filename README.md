@@ -1,12 +1,3 @@
-<!---
-[Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
- -->
-### Clase 1
-   [PPT1](https://agsantoro.github.io/untref2023/PPT/ppt1.html)
-
-   [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
-
-
 <!-- Índice -->
 # **Índice:**
 
@@ -24,6 +15,8 @@
     - [EVALUACIÓN](#evaluación)
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
 7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
+    - [Materiales CLASE 1](#clase-1)
+    - [Materiales CLASE 2](#clase-2)
 
 <!-- Contenido -->
 
@@ -102,6 +95,17 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 [Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
 
 [Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
+
+### Materiales CLASE 1
+   [PPT1](https://agsantoro.github.io/untref2023/PPT/ppt1.html)
+
+   [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
+
+
+### Materiales CLASE 2
+<!---
+[Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
+ -->
 
 ### Bibliografía
 
