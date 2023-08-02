@@ -26,7 +26,7 @@
 7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
 
 <!-- Contenido -->
-<p>&nbsp;</p>
+
 # **Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.**
 
 Cupo: 30
@@ -45,7 +45,7 @@ El curso está orientado a profesionales de diferentes disciplinas que se intere
 - Conocimientos básicos de manejo de bases de datos.
 - Lectocomprensión del idioma inglés.
 
-<p>&nbsp;</p>
+
 ## **OBJETIVOS**
 
 - Presentar definiciones y conceptos específicos de las principales fuentes de información estadísticas de salud.
@@ -55,7 +55,7 @@ El curso está orientado a profesionales de diferentes disciplinas que se intere
 - Describir procedimientos y recursos en R para visualizar los datos procesados (tablas, gráficos, mapas).
 - Describir el proceso de desarrollo de una visualización interactiva de datos con la librería Shiny y desplegarla en un servidor web.
 
-<p>&nbsp;</p>
+
 ## **CONTENIDOS** 
 
 El propósito de este curso es que, al finalizarlo, cada alumno/a haya desarrollado una visualización utilizando el software R, basada en datos abiertos de salud y disponible en la web. Durante el curso, se enfatizará la importancia de la visualización de datos en el campo de la salud y se proporcionarán directrices y mejores prácticas para la elaboración de visualizaciones efectivas. Los participantes tendrán la oportunidad de aplicar estos conceptos en la creación de sus propias aplicaciones en Shiny. Aprenderán a diseñar la interfaz de usuario, agregar elementos interactivos, vincularlos a los datos procesados y finalmente desplegar su propia aplicación Shiny en un servidor web.
@@ -80,19 +80,22 @@ Importación y manipulación de datos de salud y epidemiología. Preparación de
 
 Opciones de despliegue de aplicaciones Shiny. Configuración de una cuenta en shiny
 
-<p>&nbsp;</p>
+
+
 ## **METODOLOGÍA**
 El curso se desarrollará de manera virtual y sincrónica. Se abordarán los contenidos de forma práctica con el propósito de reproducir las diferentes fases en el desarrollo de una visualización interactiva de datos (acceso a la información, procesamiento, análisis, visualización, despliegue).
 
-<p>&nbsp;</p>
+
+
 ## **REQUISITOS PARA LA APROBACIÓN DE LA MATERIA**
+
 ### EVALUACIÓN
 Para la aprobación de la asignatura es necesario cumplimentar el 80% de asistencia a las actividades sincrónicas, tener aprobados todos los Trabajos Prácticos y una evaluación final.
 ### ASISTENCIA A CLASES
 El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
-<p>&nbsp;</p>
-## CONTENIDO DEL REPOSITORIO
+
+## **CONTENIDO DEL REPOSITORIO**
 
 ### Tutoriales
 
