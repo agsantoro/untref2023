@@ -92,7 +92,7 @@ Para la aprobación de la asignatura es necesario cumplimentar el 80% de asisten
 El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 <p>&nbsp;</p>
-## **CONTENIDO DEL REPOSITORIO** 
+## CONTENIDO DEL REPOSITORIO
 
 ### Tutoriales
 
