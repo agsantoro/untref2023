@@ -19,7 +19,7 @@
     - [Materiales CLASE 1](#materiales-clase-1)
     - [Materiales CLASE 2](#materiales-clase-2)
     - [Bibliografía](#bibliografía)
-    - [Enlaces útiles](#enlaces-utiles)
+    - [Enlaces útiles](#enlaces-útiles)
 
 <!-- Contenido -->
 
