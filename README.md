@@ -1,6 +1,10 @@
 <!---
 [Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
  -->
+### Clase 1
+   [PPT1](https://agsantoro.github.io/untref2023/PPT/ppt1.html)
+
+   [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
 
 <!-- Índice -->
 # Programa del taller
