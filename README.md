@@ -104,7 +104,6 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
    [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
 
-
 ### Materiales CLASE 2
 <!---
 [Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
