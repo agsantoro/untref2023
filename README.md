@@ -18,6 +18,8 @@
     - [Tutoriales](#tutoriales)
     - [Materiales CLASE 1](#clase-1)
     - [Materiales CLASE 2](#clase-2)
+    - [Bibliografía](#biblio)
+    - [Enlaces útiles](#enlaces)
 
 <!-- Contenido -->
 
@@ -111,3 +113,5 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 ### Bibliografía
 
 [Lineamientos Básicos para el Análisis de la mortalidad](https://iris.paho.org/bitstream/handle/10665.2/34492/9789275319819-spa.pdf?sequence=7&isAllowed=y)
+
+### Enlaces útiles
