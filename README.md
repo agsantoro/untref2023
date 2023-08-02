@@ -15,6 +15,7 @@
     - [EVALUACIÓN](#evaluación)
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
 7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
+    - [Tutoriales](#tutoriales)
     - [Materiales CLASE 1](#clase-1)
     - [Materiales CLASE 2](#clase-2)
 
