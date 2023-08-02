@@ -16,10 +16,10 @@
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
 7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
     - [Tutoriales](#tutoriales)
-    - [Materiales CLASE 1](#clase-1)
-    - [Materiales CLASE 2](#clase-2)
-    - [Bibliografía](#biblio)
-    - [Enlaces útiles](#enlaces)
+    - [Materiales CLASE 1](#materiales-clase-1)
+    - [Materiales CLASE 2](#materiales-clase-2)
+    - [Bibliografía](#bibliografía)
+    - [Enlaces útiles](#enlaces-utiles)
 
 <!-- Contenido -->
 
