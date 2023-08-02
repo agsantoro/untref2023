@@ -23,7 +23,7 @@
 6. [REQUISITOS PARA LA APROBACIÓN DE LA MATERIA](#requisitos-para-la-aprobación-de-la-materia)
     - [EVALUACIÓN](#evaluación)
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
-7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
+7. [CONTENIDO DEL REPOSITORIO:](#contenido-del-repositorio)
 
 <!-- Contenido -->
 <p>&nbsp;</p>
