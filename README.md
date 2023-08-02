@@ -1,9 +1,3 @@
-# Contenido del repositorio 
-
-[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
-
-[Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
-
 <!---
 [Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
  -->
@@ -24,9 +18,10 @@
 6. [REQUISITOS PARA LA APROBACIÓN DE LA MATERIA](#requisitos-para-la-aprobación-de-la-materia)
     - [EVALUACIÓN](#evaluación)
     - [ASISTENCIA A CLASES](#asistencia-a-clases)
+7. [CONTENIDO DEL REPOSITORIO](#contenido-del-repositorio)
 
 <!-- Contenido -->
-# Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.
+# **Programa: Introducción al procesamiento, análisis y visualización interactiva de datos abiertos en salud.**
 
 Cupo: 30
 
@@ -85,3 +80,14 @@ El curso se desarrollará de manera virtual y sincrónica. Se abordarán los con
 Para la aprobación de la asignatura es necesario cumplimentar el 80% de asistencia a las actividades sincrónicas, tener aprobados todos los Trabajos Prácticos y una evaluación final.
 ### ASISTENCIA A CLASES
 El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
+
+
+## CONTENIDO DEL REPOSITORIO: 
+
+[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
+
+[Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
+
+# BIBLIOGRAFÍA
+
+Materiales complementarios:
