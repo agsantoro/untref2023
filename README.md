@@ -114,3 +114,4 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 [Lineamientos Básicos para el Análisis de la mortalidad](https://iris.paho.org/bitstream/handle/10665.2/34492/9789275319819-spa.pdf?sequence=7&isAllowed=y)
 
 ### Enlaces útiles
+[Reporte interactivo de estadísticas de salud -DEIS](https://www.argentina.gob.ar/salud/deis/reporte-interactivo)
