@@ -128,6 +128,8 @@ Luego verán que se crea una ventana llamada “.gitconfig” y alli deberán co
 
 [https://github.com/velenp/curso_shiny](https://github.com/velenp/curso_shiny)
 
+> Por ahora tenemos vacío este repo. Iremos subiendo proyectos a medida que avancemos con el curso.
+
 
 Haga clic en el botón verde que dice “code” y se desplegará una ventana, donde puede copiar el enlace del repositorio, o también puede descargar el .ZIP. En este caso vamos a descargar el .ZIP. Si usted desea conectarse para trabajar colaborativamente con ese repositorio puede copiar el enlace y clonarlo desde RStudio. Hay que tener en cuenta que para que esto sea posible el repositorio debe estar compartido con su usuario, de lo contrario no podrá trabajar colaborativamente. 
 
