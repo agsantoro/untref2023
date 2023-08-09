@@ -6,12 +6,12 @@ output:
     theme: cosmo
     toc: yes
     toc_float:
-      collapsed: true
+      collapsed: false
 ---
 
 En este documento se presentan tres análisis con graficos interactivos para realizar con datos de Eventos de Notificación obligatoria provenientes de Datos Abiertos. 
 
-Para las visualizaciones interactivas se utilizaron los paquetes *highcharter*, *echarts4r* y *Leaflet*.
+Para las visualizaciones interactivas se utilizaron los paquetes *highcharter* y *Leaflet*.
 
 ```{r echo=FALSE, include=FALSE}
 library(klippy)
@@ -20,13 +20,11 @@ library(klippy)
 ```{r klippy, echo=FALSE, include=TRUE}
 #remotes::install_github("rlesur/klippy")
 klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_success = 'Done',position = c('top', 'right'))
-
 ```
 
 # Instalación de paquetes y lectura de datos:
 
-```{r message=FALSE, warning=FALSE, class.source='klippy'}
-
+```{r}
 library(readxl)
 library(tidyverse)
 library(ISOweek)
@@ -40,14 +38,18 @@ library(sf)
 library(tmap)
 library(leaflet)
 library(DT)
+```
 
+
+```{r message=FALSE, warning=FALSE, class.source='klippy'}
+
+##leo la tablas
 datos_respiratorias <- 
   read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
 
 
 ##para otros años
 datos_respiratorias2 <- read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
-
 ```
 
 
@@ -71,10 +73,12 @@ DT::datatable(head(datos_eti))
 
 ```
 
-Transformamos las variables Año y semanas_epidemiológicas en una variable con formato fecha de la semana. Para ello creo una función (convert_epiweek) por que las semana epi en el año 2020 tuvieron características que no me permiten hacen una transformación a fecha directa.
+Transformamos las variables Año y semanas_epidemiológicas en una variable con formato fecha de la semana. Para ello creo una función (convert_epiweek) porque las semanas epi en el año 2020 tuvieron características que no me permiten hacen una transformación a fecha directa.
 
 
 ```{r message=FALSE, warning=FALSE}
+
+###esta fn sirve para generar una variable fecha a aprtir de un vector de año y otro de semana EPI.
 convert_epiweek <- function(year, week) {
   epiweek_date <- ifelse(year == 2020 & week == 53,
                          "2020-W53",
@@ -91,26 +95,34 @@ convert_epiweek <- function(year, week) {
 
 ```{r message=FALSE, warning=FALSE}
 datos_eti <- datos_eti %>% ungroup() %>%
-  mutate(semana = yearweek(convert_epiweek(año, semanas_epidemiologicas)))
-
-DT::datatable(head(datos_eti))
-```
-Ahora utilizo el paquete *JohnCoene/echarts4r* para hacer una visualización de la serie completa donde pueda agregar y quitar las provincias y ademas filtrar por el eje x, del tiempo para hacer zoom. 
-
-```{r message=FALSE, warning=FALSE}
-# chago conversiones de fecha
+  mutate(semana = 
+           yearweek(convert_epiweek(año, semanas_epidemiologicas)))
 datos_eti$semana2 <- as.Date(datos_eti$semana)
 datos_eti$semana3 <- as.POSIXct(datos_eti$semana)
-
+DT::datatable(head(datos_eti))
 ```
+Ahora utilizo el paquete *Highcharter* para hacer una visualización de la serie completa donde pueda agregar y quitar las provincias y ademas filtrar por el eje x, del tiempo para hacer zoom. 
 
+Para ello, primero creo la tabla *ts_base*.
 
 ```{r}
 
 ts_base = datos_eti %>%
-  group_by(provincia_nombre, semana) %>% summarise(conteo = sum(conteo))
-ts_base$semana = as.character(ts_base$semana)
+  group_by(provincia_nombre, semana) %>% 
+  summarise(conteo = sum(conteo))
 
+ts_base$semana = as.character(ts_base$semana)
+DT::datatable(ts_base)
+
+```
+
+Como se puede observar en la tabla de arriba, hay faltantes en la serie de tiempo. Para algunas provincias hay semanas que estan ausentes porque no hay datos. 
+Para poder contruir gráficos con la libreria *Highcharter* es necesario tener la serie completa. Una forma fácil de rellenar es utilizando la fn *expand_grid()*.
+
+Esta función crea un nuevo dataframe con todas las combinaciones de dos o mas vectores proporcionados. Una vez generado el grid se realiza un join por derecha para traer los datos de casos notificados.
+
+
+```{r}
 grid = list(
   provincia_nombre = unique(ts_base$provincia_nombre),
   semana = unique(as.character(ts_base$semana))
@@ -119,20 +131,24 @@ grid = list(
 grid = expand.grid(grid)
 data_grafico = left_join(grid, ts_base %>% as.data.frame)
 data_grafico$conteo[is.na(data_grafico$conteo)] = 0
+DT::datatable(grid)
 
 ```
+Usando la tabla *data_grafico* se puede elaborarar el gráfico.
 
 ```{r}
 
 grafico =
   highchart() %>%
   hc_chart(type = "line",
-           zoomType = 'xy') %>%
-  hc_title(text = "Notificaciones de ETI por SEPI") %>%
-  hc_xAxis(categories = data_grafico$semana) %>%
-  hc_yAxis(title = list(text = "Notificaciones"))
+           zoomType = 'xy') %>% #aca defino el tipo de grafico y si quiero la funcion para hacer zoom a algun eje
+  hc_title(text = "Notificaciones de ETI por SEPI") %>% #titulo
+  hc_xAxis(categories = unique(ts_base$semana))%>% ## ejes
+  hc_yAxis(title = list(text = "Notificaciones")) #titulos de ejes
 
 provincias_seleccionadas = c("Buenos Aires", "Córdoba", "CABA", "Santa Fe", "Mendoza")
+
+#aca se hace un loop donde se itera por las provincias seleccionadas usando la fn de hc_add_series del paquete highcharter.
 
 for (i in provincias_seleccionadas) {
   conteo = data_grafico$conteo[data_grafico$provincia_nombre == i]
@@ -140,7 +156,6 @@ for (i in provincias_seleccionadas) {
 }
 
 grafico
-
 ```
 
 # Graficos combinados
@@ -150,13 +165,14 @@ Se presenta a continuación un gráfico interactivo combinado utilizando *highch
 EN primer lugar, preparo tablas para cada uno de estos graficos con los datos por semana y por grupo de edad.
 
 ```{r message=FALSE, warning=FALSE}
-
+#armo tabla de porcentajes para grafico de torta
 torta <- datos_respiratorias %>%
   filter(año == 2022) %>%
   group_by(grupo_edad_desc) %>%
   summarise(casos = sum(cantidad_casos)) %>%
   mutate(porcent = round(casos / sum(casos) * 100, 1))
 
+#ordeno las categorias de grupos de edad para que esten de menor a mayor
 torta <- torta %>%
   mutate(
     grupo_edad_desc = case_when(
@@ -179,12 +195,14 @@ torta <- torta %>%
   ) %>%
   arrange(as.numeric(substring(grupo_edad_desc, 1, 2)))
 
+# armo tabla de n para el gráfico de barras
 barras <- datos_respiratorias %>%
   filter(año == 2022) %>%
   group_by(semanas_epidemiologicas) %>%
   summarise(casos = sum(cantidad_casos)) %>%
   mutate(porcent = round(casos / sum(casos) * 100, 1))
 
+# asi quedaro ambas tablas
 DT::datatable(torta)
 DT::datatable(head(barras))
 ```
@@ -194,45 +212,44 @@ Código para el gráfico:
 ```{r}
 
 highchart() %>%
-  hc_add_series(
+  hc_add_series(# agrego serie para barras
     barras,
     "column", hcaes(
       x = semanas_epidemiologicas, y = casos
     ),
-    name = "Casos de ETI",
-    color="#2c7fb8"##ver porque no funciona
+    name = "Casos de ETI"
   ) %>%
-  hc_add_series(
+  hc_add_series(#Agrego serie para torta
     torta, "pie", hcaes(
       name = grupo_edad_desc, y = porcent
     ),
     name = "Casos de ETI (%)"
   ) %>%
-  ## Options for each type of series
+  ## en ociones puedo definir como quiero ver los labels,y la ubicacion y tamaño
   hc_plotOptions(
     series = list(
       showInLegend = FALSE,
       pointFormat = "{point.y}%",
       colorByPoint = FALSE
     ), 
-    pie = list(
+    pie = list(## caracteristicas del pies
       center = c("65%", "10%"),
       size = 120,
       dataLabels = list(enabled = FALSE),
       colorByPoint = TRUE
     ),
-    column = list(
-                    groupPadding = 0,
-                    pointPadding = 0,
-                    borderWidth = 0.3,
-                    borderColor = "white"
+    column = list(groupPadding = 0,#características de las barras
+                  pointPadding = 0,
+                  borderWidth = 0.3,
+                  borderColor = "white",# color de los bordes
+                  color= "#377eb8" #color de la barrra
                   )
-  ) %>%
+  )%>%
   ## Axis
   hc_yAxis(
     title = list(text = "Número de casos"),
     labels = list(format = "{value}"),
-    max = 50000
+    max = 50500
   ) %>%
   hc_xAxis(title = list(text = "Semana EPI"),
       categories = barras$semanas_epidemiologicas
@@ -260,18 +277,15 @@ Leo los datos de datos abiertos que los tengo previamente descargados en una car
 
 ```{r}
 sifilis <-  read.csv("RMD/RMD003_Analisis/datos/tasa-sifilis-por-100-mil-habitantes-sexo-jurisdiccion-2018-2020-argentina_1.csv", encoding = "latin1")
-
 ```
 
 ```{r message=FALSE, warning=FALSE}
-
 tasas <- sifilis %>% 
   filter(anio==2018|anio==2020, id_sexo==3,
          id_jurisdiccion!=200) %>% 
   spread(anio, jurisdiccion_tasa_sifilis)
 
 DT::datatable(head(tasas))
-
 ```
 
 Leo mapa de argentina en formato RDS:
@@ -286,8 +300,8 @@ ggplot(data = mapa_arg) +
 Unimos tabla de tasas con mapa.
 
 ```{r message=FALSE, warning=FALSE}
-tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
 
+tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
 table(mapa_arg$NAME_1)
 
 mapa_arg <- dplyr::left_join(mapa_arg, tasas, by = c("NAME_1"="jurisdiccion"))
