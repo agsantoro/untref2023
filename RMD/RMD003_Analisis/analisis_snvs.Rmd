@@ -24,7 +24,7 @@ klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_suc
 
 # Instalación de paquetes y lectura de datos:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(readxl)
 library(tidyverse)
 library(ISOweek)
@@ -105,7 +105,7 @@ Ahora utilizo el paquete *Highcharter* para hacer una visualización de la serie
 
 Para ello, primero creo la tabla *ts_base*.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 ts_base = datos_eti %>%
   group_by(provincia_nombre, semana) %>% 
@@ -122,7 +122,7 @@ Para poder contruir gráficos con la libreria *Highcharter* es necesario tener l
 Esta función crea un nuevo dataframe con todas las combinaciones de dos o mas vectores proporcionados. Una vez generado el grid se realiza un join por derecha para traer los datos de casos notificados.
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 grid = list(
   provincia_nombre = unique(ts_base$provincia_nombre),
   semana = unique(as.character(ts_base$semana))
@@ -131,6 +131,7 @@ grid = list(
 grid = expand.grid(grid)
 data_grafico = left_join(grid, ts_base %>% as.data.frame)
 data_grafico$conteo[is.na(data_grafico$conteo)] = 0
+
 DT::datatable(grid)
 
 ```
@@ -156,7 +157,16 @@ for (i in provincias_seleccionadas) {
 }
 
 grafico
+```   
+
+
+Puedo cambiar el tema. Es esta [página](https://jkunst.com/highcharter/articles/themes.html)) tengo modelos-
+```{r message=FALSE, warning=FALSE}
+##https://jkunst.com/highcharter/articles/themes.html#themes-19
+grafico %>% 
+  hc_add_theme(hc_theme_google())
 ```
+
 
 # Graficos combinados
 
@@ -202,7 +212,7 @@ barras <- datos_respiratorias %>%
   summarise(casos = sum(cantidad_casos)) %>%
   mutate(porcent = round(casos / sum(casos) * 100, 1))
 
-# asi quedaro ambas tablas
+# asi quedaron ambas tablas
 DT::datatable(torta)
 DT::datatable(head(barras))
 ```
@@ -297,8 +307,10 @@ mapa_arg <- sf::st_transform(mapa_arg, 5345)## EPSG:5345  posgar 2007/ Argentina
 ggplot(data = mapa_arg) +
     geom_sf(crs=5345)
 ```
-Unimos tabla de tasas con mapa.
 
+
+
+Unimos tabla de tasas con mapa.
 ```{r message=FALSE, warning=FALSE}
 
 tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
