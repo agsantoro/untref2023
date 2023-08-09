@@ -26,12 +26,17 @@ library(sf)
 library(tmap)
 library(leaflet)
 
-datos_respiratorias <- 
-  read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
+# datos_respiratorias <- 
+#   read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
+
+datos_respiratorias <-
+  read_excel("datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
+
 
 ##para otros años
-datos_respiratorias2 <- read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
+# datos_respiratorias2 <- read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
 
+datos_respiratorias2 <- read_excel("datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
 ```
 
 # Serie temporal de notificaciones de ETI (Enfermedad Tipo Influenza)
@@ -41,6 +46,7 @@ datos_eti <- datos_respiratorias %>%
   filter(evento_nombre == "Enfermedad tipo influenza (ETI)") %>%
   group_by(provincia_nombre, provincia_id, año, semanas_epidemiologicas) %>%
   summarise(conteo = sum(cantidad_casos))
+
 table(datos_eti$año)
 
 datos_eti2 <- datos_respiratorias2 %>%
@@ -91,30 +97,38 @@ datos_eti$semana3 <- as.POSIXct(datos_eti$semana)
 
 plotdata <- datos_eti%>% 
   select(semana3,provincia_nombre,conteo) %>% 
- pivot_wider(names_from = provincia_nombre, values_from = conteo)
+  pivot_wider(names_from = provincia_nombre, values_from = conteo)
 #library(quantmod)
 ```
 
 ```{r}
-#remotes::install_github("JohnCoene/echarts4r")
-ts_base <- datos_eti %>%
-  filter(
-    provincia_nombre %in% c("Buenos Aires",
-                            "Córdoba", "CABA",
-                            "Santa Fe", "Mendoza"),
-    año < 2023
-  ) %>%
-  select(provincia_nombre, semana3, conteo) %>%
-  group_by(provincia_nombre) %>%
-  e_charts(x = semana3) %>%
-  e_datazoom(type = "slider",
-             toolbox = FALSE,
-             bottom = -5) %>%
-  e_tooltip() %>%
-  e_title("Notificaciones de ETI por SEPI") %>%
-  e_x_axis(semana3, axisPointer = list(show = TRUE))
+# remotes::install_github("JohnCoene/echarts4r")
 
-ts_base %>% e_line(conteo)
+# ts_base <- datos_eti %>%
+#   dplyr::filter(
+#     provincia_nombre %in% c("Buenos Aires",
+#                             "Córdoba", "CABA",
+#                             "Santa Fe", "Mendoza"),
+#     año < 2023
+#   ) %>%
+#   select(provincia_nombre, semana3, conteo) %>%
+#   group_by(provincia_nombre) %>%
+#   e_charts(x = semana3) %>%
+#   e_datazoom(type = "slider",
+#              toolbox = FALSE,
+#              bottom = -5) %>%
+#   e_tooltip() %>%
+#   e_title("Notificaciones de ETI por SEPI") %>%
+#   e_x_axis(semana3, axisPointer = list(show = TRUE))
+# 
+# ts_base %>% e_line(conteo)
+
+
+
+ts_base = datos_eti %>% group_by(provincia_nombre,semana) %>% summarise(conteo=sum(conteo))
+                        
+                    
+
 ```
 
 # Graficos combinados
@@ -174,7 +188,7 @@ highchart() %>%
       x = semanas_epidemiologicas, y = casos
     ),
     name = "Casos de ETI",
-    color="blue"##ver porque no funciona
+    color="#2c7fb8"##ver porque no funciona
   ) %>%
   hc_add_series(
     torta, "pie", hcaes(
@@ -187,12 +201,20 @@ highchart() %>%
     series = list(
       showInLegend = FALSE,
       pointFormat = "{point.y}%",
-      colorByPoint = TRUE
-    ), pie = list(
+      colorByPoint = FALSE
+    ), 
+    pie = list(
       center = c("65%", "10%"),
       size = 120,
-      dataLabels = list(enabled = FALSE)
-    )
+      dataLabels = list(enabled = FALSE),
+      colorByPoint = TRUE
+    ),
+    column = list(
+                    groupPadding = 0,
+                    pointPadding = 0,
+                    borderWidth = 0.3,
+                    borderColor = "white"
+                  )
   ) %>%
   ## Axis
   hc_yAxis(
@@ -215,11 +237,7 @@ highchart() %>%
   ) %>%
   hc_credits(
     enabled = TRUE, text = "Fuente: Datos abiertos/ SNVS", href = "http://datos.salud.gob.ar/", style = list(fontSize = "12px")
-  ) %>%
-  hc_size(
-    height = 600,
-    width = 1000
-  )
+  ) 
 ```
 
 # Mapas:
@@ -229,7 +247,7 @@ Se van a presentar mapas de tasa de notificación de Sífilis en ambos sexos, pa
 Leo los datos de datos abiertos que los tengo previamente descargados en una carpeta:
 
 ```{r}
-sifilis <-  read.csv("RMD/RMD003_Analisis/datos/tasa-sifilis-por-100-mil-habitantes-sexo-jurisdiccion-2018-2020-argentina_1.csv", encoding = "latin1")
+sifilis <-  read.csv("datos/tasa-sifilis-por-100-mil-habitantes-sexo-jurisdiccion-2018-2020-argentina_1.csv", encoding = "latin1")
 
 ```
 
