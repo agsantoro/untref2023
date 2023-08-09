@@ -1,0 +1,282 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+code_folding: show
+---
+
+En este documento se presentan tres análisis con graficos interactivos para realizar con datos de Eventos de Notificación obligatoria provenientes de Datos Abiertos. 
+
+Para las visualizaciones interactivas se utilizaron los paquetes *highcharter*, *echarts4r* y *Leaflet*.
+
+# Instalación de paquetes y lectura de datos:
+
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+library(tidyverse)
+library(ISOweek)
+library(tidyr)
+library(highcharter)
+library(tsibble)
+library(lubridate)
+library(geojsonsf)
+library(echarts4r)
+library(sf)
+library(tmap)
+library(leaflet)
+
+datos_respiratorias <- 
+  read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
+
+##para otros años
+datos_respiratorias2 <- read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
+
+```
+
+# Serie temporal de notificaciones de ETI (Enfermedad Tipo Influenza)
+
+```{r message=FALSE, warning=FALSE}
+datos_eti <- datos_respiratorias %>%
+  filter(evento_nombre == "Enfermedad tipo influenza (ETI)") %>%
+  group_by(provincia_nombre, provincia_id, año, semanas_epidemiologicas) %>%
+  summarise(conteo = sum(cantidad_casos))
+table(datos_eti$año)
+
+datos_eti2 <- datos_respiratorias2 %>%
+  filter(evento_nombre == "Enfermedad tipo influenza (ETI)",
+         año != 2022) %>%
+  group_by(provincia_nombre, provincia_id, año, semanas_epidemiologicas) %>%
+  summarise(conteo = sum(cantidad_casos))
+
+datos_eti <- rbind(datos_eti, datos_eti2)
+head(datos_eti)
+
+```
+
+Transformamos las variables Año y semanas_epidemiológicas en una variable con formato fecha de la semana. Para ello creo una función (convert_epiweek) por que las semana epi en el año 2020 tuvieron características que no me permiten hacen una transformación a fecha directa.
+
+
+```{r message=FALSE, warning=FALSE}
+convert_epiweek <- function(year, week) {
+  epiweek_date <- ifelse(year == 2020 & week == 53,
+                         "2020-W53",
+                         ifelse(year == 2020, ISOweek(ymd(
+                           as.Date(paste(year, week, 1, sep = "-"), "%Y-%U-%u")
+                         ) - weeks(1)),
+                         ISOweek(as.Date(
+                           paste(year, week, 1, sep = "-"), "%Y-%U-%u"
+                         ))))
+  return(epiweek_date)
+}
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+datos_eti <- datos_eti %>% ungroup() %>%
+  mutate(semana = yearweek(convert_epiweek(año, semanas_epidemiologicas)))
+
+head(datos_eti)
+
+```
+
+
+Ahora utilizo el paquete *JohnCoene/echarts4r* para hacer una visualización de la serie completa donde pueda agregar y quitar las provincias y ademas filtrar por el eje x, del tiempo para hacer zoom. 
+
+```{r message=FALSE, warning=FALSE}
+# chago conversiones de fecha
+datos_eti$semana2 <- as.Date(datos_eti$semana)
+datos_eti$semana3 <- as.POSIXct(datos_eti$semana)
+
+plotdata <- datos_eti%>% 
+  select(semana3,provincia_nombre,conteo) %>% 
+ pivot_wider(names_from = provincia_nombre, values_from = conteo)
+#library(quantmod)
+```
+
+```{r}
+#remotes::install_github("JohnCoene/echarts4r")
+ts_base <- datos_eti %>%
+  filter(
+    provincia_nombre %in% c("Buenos Aires",
+                            "Córdoba", "CABA",
+                            "Santa Fe", "Mendoza"),
+    año < 2023
+  ) %>%
+  select(provincia_nombre, semana3, conteo) %>%
+  group_by(provincia_nombre) %>%
+  e_charts(x = semana3) %>%
+  e_datazoom(type = "slider",
+             toolbox = FALSE,
+             bottom = -5) %>%
+  e_tooltip() %>%
+  e_title("Notificaciones de ETI por SEPI") %>%
+  e_x_axis(semana3, axisPointer = list(show = TRUE))
+
+ts_base %>% e_line(conteo)
+```
+
+# Graficos combinados
+
+Se presenta a continuación un gráfico interactivo combinado utilizando *highcharter*. Se muestras graficos de barra para las semanas epis y un gráfico de torta para mostrar como se distribuye la edad en ese conjunto de datos.
+
+EN primer lugar, preparo tablas para cada uno de estos graficos con los datos por semana y por grupo de edad.
+
+```{r message=FALSE, warning=FALSE}
+torta <- datos_respiratorias %>%
+  filter(año == 2022) %>%
+  group_by(grupo_edad_desc) %>%
+  summarise(casos = sum(cantidad_casos)) %>%
+  mutate(porcent = round(casos / sum(casos) * 100, 1))
+
+torta <- torta %>%
+  mutate(
+    grupo_edad_desc = case_when(
+      grupo_edad_desc == "< 6 m" ~ "1. < 6 m",
+      grupo_edad_desc == "6 a 11 m" ~ "2. 6 a 11 m",
+      grupo_edad_desc == "10 a 14" ~ "6. 10 a 14",
+      grupo_edad_desc == "12 a 23 m" ~ "3. 12 a 23 m",
+      grupo_edad_desc == "15 a 19" ~ "7. 15 a 19",
+      grupo_edad_desc == "2 a 4" ~ "4. 2 a 4",
+      grupo_edad_desc == "20 a 24" ~ "8. 20 a 24",
+      grupo_edad_desc == "25 a 34" ~ "9. 25 a 34",
+      grupo_edad_desc == "35 a 44" ~ "10. 35 a 44",
+      grupo_edad_desc == "45 a 64" ~ "11. 45 a 64",
+      grupo_edad_desc == "5 a 9" ~ "5. 5 a 9",
+      grupo_edad_desc == "65 a 74" ~ "12. 65 a 74",
+      grupo_edad_desc == ">= a 75" ~ "13. >= a 75",
+      grupo_edad_desc == "Edad Sin Esp." ~ "14. Edad Sin Esp.",
+      TRUE ~ grupo_edad_desc
+    )
+  ) %>%
+  arrange(as.numeric(substring(grupo_edad_desc, 1, 2)))
+
+barras <- datos_respiratorias %>%
+  filter(año == 2022) %>%
+  group_by(semanas_epidemiologicas) %>%
+  summarise(casos = sum(cantidad_casos)) %>%
+  mutate(porcent = round(casos / sum(casos) * 100, 1))
+
+torta
+head(barras)
+
+```
+
+Codigo para el grafico:
+
+```{r}
+
+highchart() %>%
+  hc_add_series(
+    barras,
+    "column", hcaes(
+      x = semanas_epidemiologicas, y = casos
+    ),
+    name = "Casos de ETI",
+    color="blue"##ver porque no funciona
+  ) %>%
+  hc_add_series(
+    torta, "pie", hcaes(
+      name = grupo_edad_desc, y = porcent
+    ),
+    name = "Casos de ETI (%)"
+  ) %>%
+  ## Options for each type of series
+  hc_plotOptions(
+    series = list(
+      showInLegend = FALSE,
+      pointFormat = "{point.y}%",
+      colorByPoint = TRUE
+    ), pie = list(
+      center = c("65%", "10%"),
+      size = 120,
+      dataLabels = list(enabled = FALSE)
+    )
+  ) %>%
+  ## Axis
+  hc_yAxis(
+    title = list(text = "Número de casos"),
+    labels = list(format = "{value}"),
+    max = 50000
+  ) %>%
+  hc_xAxis(title = list(text = "Semana EPI"),
+      categories = barras$semanas_epidemiologicas
+  ) %>%
+  ## Titles, subtitle, caption and credits
+  hc_title(
+    text = "Grafico de barras combinado con piechart: Notificaciones de ETI, año 2022"
+  ) %>%
+  hc_subtitle(
+    text = "Ejemplo de grafico combinado para notificaciones de eti por semana y grupo de edad"
+  ) %>%
+  hc_caption(
+    text = "Se representatan casos notificados de ETI al SNVS 2.0"
+  ) %>%
+  hc_credits(
+    enabled = TRUE, text = "Fuente: Datos abiertos/ SNVS", href = "http://datos.salud.gob.ar/", style = list(fontSize = "12px")
+  ) %>%
+  hc_size(
+    height = 600,
+    width = 1000
+  )
+```
+
+# Mapas:
+
+Se van a presentar mapas de tasa de notificación de Sífilis en ambos sexos, para los años 2018 y 2020. 
+
+Leo los datos de datos abiertos que los tengo previamente descargados en una carpeta:
+
+```{r}
+sifilis <-  read.csv("RMD/RMD003_Analisis/datos/tasa-sifilis-por-100-mil-habitantes-sexo-jurisdiccion-2018-2020-argentina_1.csv", encoding = "latin1")
+
+```
+
+```{r message=FALSE, warning=FALSE}
+tasas <- sifilis %>% 
+  filter(anio==2018|anio==2020, id_sexo==3,
+         id_jurisdiccion!=200) %>% 
+  spread(anio, jurisdiccion_tasa_sifilis)
+
+head(tasas)
+```
+
+Leo mapa de argentina en formato RDS:
+
+```{r message=FALSE, warning=FALSE}
+mapa_arg <- readRDS(url("https://biogeo.ucdavis.edu/data/gadm3.6/Rsf/gadm36_ARG_1_sf.rds"))
+
+mapa_arg <- sf::st_transform(mapa_arg, 5345)## EPSG:5345  posgar 2007/ Argentina faja 3
+ggplot(data = mapa_arg) +
+    geom_sf(crs=5345)
+```
+
+
+Unimos tabla de tasas con mapa:
+
+```{r message=FALSE, warning=FALSE}
+tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
+
+table(mapa_arg$NAME_1)
+
+mapa_arg <- dplyr::left_join(mapa_arg, tasas, by = c("NAME_1"="jurisdiccion"))
+names(mapa_arg) 
+class(mapa_arg)
+
+#mapa_arg_json <- sf_geojson(mapa_arg)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# highchart(type = "map") %>% 
+#   hc_add_series_map(map = mapa_arg_json, df = dfita1, joinBy = "id", value = "length") 
+```
+
+```{r message=FALSE, warning=FALSE}
+tmap_mode("view")
+tm_shape(mapa_arg) +
+    tm_polygons(c("2018", "2020"), n=4, style="jenks") +
+    tm_facets(sync = TRUE, ncol = 2)
+```
+
