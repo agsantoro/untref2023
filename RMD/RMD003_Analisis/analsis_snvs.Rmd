@@ -1,20 +1,31 @@
 ---
-title: "R Notebook"
-output:
+title: "Análisis de datos de Eventos de Notificación Obligatoria - SNVS Datos abiertos"
+date: "`r Sys.Date()`"
+output: 
   html_document:
-    df_print: paged
-code_folding: show
+    theme: cosmo
+    toc: yes
+    toc_float:
+      collapsed: true
 ---
 
 En este documento se presentan tres análisis con graficos interactivos para realizar con datos de Eventos de Notificación obligatoria provenientes de Datos Abiertos. 
 
 Para las visualizaciones interactivas se utilizaron los paquetes *highcharter*, *echarts4r* y *Leaflet*.
-```{r klippy, echo=FALSE, include=TRUE}
-klippy::klippy('')
+
+```{r echo=FALSE, include=FALSE}
+library(klippy)
 ```
+
+```{r klippy, echo=FALSE, include=TRUE}
+#remotes::install_github("rlesur/klippy")
+klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_success = 'Done',position = c('top', 'right'))
+
+```
+
 # Instalación de paquetes y lectura de datos:
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, class.source='klippy'}
 
 library(readxl)
 library(tidyverse)
@@ -28,23 +39,26 @@ library(echarts4r)
 library(sf)
 library(tmap)
 library(leaflet)
+library(DT)
 
 datos_respiratorias <- 
   read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20230706.xlsx")
+
 
 ##para otros años
 datos_respiratorias2 <- read_excel("RMD/RMD003_Analisis/datos/informacion-publica-respiratorias-nacional-hasta-20220905.xlsx")
 
 ```
 
+
 # Serie temporal de notificaciones de ETI (Enfermedad Tipo Influenza)
 
 ```{r message=FALSE, warning=FALSE}
+
 datos_eti <- datos_respiratorias %>%
   filter(evento_nombre == "Enfermedad tipo influenza (ETI)") %>%
   group_by(provincia_nombre, provincia_id, año, semanas_epidemiologicas) %>%
   summarise(conteo = sum(cantidad_casos))
-table(datos_eti$año)
 
 datos_eti2 <- datos_respiratorias2 %>%
   filter(evento_nombre == "Enfermedad tipo influenza (ETI)",
@@ -53,7 +67,7 @@ datos_eti2 <- datos_respiratorias2 %>%
   summarise(conteo = sum(cantidad_casos))
 
 datos_eti <- rbind(datos_eti, datos_eti2)
-head(datos_eti)
+DT::datatable(head(datos_eti))
 
 ```
 
@@ -72,7 +86,6 @@ convert_epiweek <- function(year, week) {
                          ))))
   return(epiweek_date)
 }
-
 ```
 
 
@@ -80,11 +93,8 @@ convert_epiweek <- function(year, week) {
 datos_eti <- datos_eti %>% ungroup() %>%
   mutate(semana = yearweek(convert_epiweek(año, semanas_epidemiologicas)))
 
-head(datos_eti)
-
+DT::datatable(head(datos_eti))
 ```
-
-
 Ahora utilizo el paquete *JohnCoene/echarts4r* para hacer una visualización de la serie completa donde pueda agregar y quitar las provincias y ademas filtrar por el eje x, del tiempo para hacer zoom. 
 
 ```{r message=FALSE, warning=FALSE}
@@ -92,39 +102,11 @@ Ahora utilizo el paquete *JohnCoene/echarts4r* para hacer una visualización de 
 datos_eti$semana2 <- as.Date(datos_eti$semana)
 datos_eti$semana3 <- as.POSIXct(datos_eti$semana)
 
-plotdata <- datos_eti%>% 
-  select(semana3,provincia_nombre,conteo) %>% 
- pivot_wider(names_from = provincia_nombre, values_from = conteo)
-#library(quantmod)
 ```
 
-```{r}
-#remotes::install_github("JohnCoene/echarts4r")
-
-ts_base = datos_eti %>%
-  group_by(provincia_nombre,semana) %>% summarise(conteo=sum(conteo))
-
-ts_base <- datos_eti %>%
-  filter(
-    provincia_nombre %in% c("Buenos Aires",
-                            "Córdoba", "CABA",
-                            "Santa Fe", "Mendoza"),
-    año < 2023
-  ) %>%
-  select(provincia_nombre, semana3, conteo) %>%
-  group_by(provincia_nombre) %>%
-  e_charts(x = semana3) %>%
-  e_datazoom(type = "slider",
-             toolbox = FALSE,
-             bottom = -5) %>%
-  e_tooltip() %>%
-  e_title("Notificaciones de ETI por SEPI") %>%
-  e_x_axis(semana3, axisPointer = list(show = TRUE))
-
-ts_base %>% e_line(conteo)
-```
 
 ```{r}
+
 ts_base = datos_eti %>%
   group_by(provincia_nombre, semana) %>% summarise(conteo = sum(conteo))
 ts_base$semana = as.character(ts_base$semana)
@@ -137,9 +119,11 @@ grid = list(
 grid = expand.grid(grid)
 data_grafico = left_join(grid, ts_base %>% as.data.frame)
 data_grafico$conteo[is.na(data_grafico$conteo)] = 0
+
 ```
 
 ```{r}
+
 grafico =
   highchart() %>%
   hc_chart(type = "line",
@@ -156,9 +140,8 @@ for (i in provincias_seleccionadas) {
 }
 
 grafico
+
 ```
-
-
 
 # Graficos combinados
 
@@ -167,6 +150,7 @@ Se presenta a continuación un gráfico interactivo combinado utilizando *highch
 EN primer lugar, preparo tablas para cada uno de estos graficos con los datos por semana y por grupo de edad.
 
 ```{r message=FALSE, warning=FALSE}
+
 torta <- datos_respiratorias %>%
   filter(año == 2022) %>%
   group_by(grupo_edad_desc) %>%
@@ -201,11 +185,11 @@ barras <- datos_respiratorias %>%
   summarise(casos = sum(cantidad_casos)) %>%
   mutate(porcent = round(casos / sum(casos) * 100, 1))
 
-torta
-head(barras)
+DT::datatable(torta)
+DT::datatable(head(barras))
 ```
 
-Codigo para el grafico:
+Código para el gráfico:
 
 ```{r}
 
@@ -216,7 +200,7 @@ highchart() %>%
       x = semanas_epidemiologicas, y = casos
     ),
     name = "Casos de ETI",
-    color="blue"##ver porque no funciona
+    color="#2c7fb8"##ver porque no funciona
   ) %>%
   hc_add_series(
     torta, "pie", hcaes(
@@ -229,12 +213,20 @@ highchart() %>%
     series = list(
       showInLegend = FALSE,
       pointFormat = "{point.y}%",
-      colorByPoint = TRUE
-    ), pie = list(
+      colorByPoint = FALSE
+    ), 
+    pie = list(
       center = c("65%", "10%"),
       size = 120,
-      dataLabels = list(enabled = FALSE)
-    )
+      dataLabels = list(enabled = FALSE),
+      colorByPoint = TRUE
+    ),
+    column = list(
+                    groupPadding = 0,
+                    pointPadding = 0,
+                    borderWidth = 0.3,
+                    borderColor = "white"
+                  )
   ) %>%
   ## Axis
   hc_yAxis(
@@ -257,14 +249,10 @@ highchart() %>%
   ) %>%
   hc_credits(
     enabled = TRUE, text = "Fuente: Datos abiertos/ SNVS", href = "http://datos.salud.gob.ar/", style = list(fontSize = "12px")
-  ) %>%
-  hc_size(
-    height = 600,
-    width = 1000
-  )
+  ) 
 ```
 
-# Mapas:
+# Mapas
 
 Se van a presentar mapas de tasa de notificación de Sífilis en ambos sexos, para los años 2018 y 2020. 
 
@@ -276,12 +264,14 @@ sifilis <-  read.csv("RMD/RMD003_Analisis/datos/tasa-sifilis-por-100-mil-habitan
 ```
 
 ```{r message=FALSE, warning=FALSE}
+
 tasas <- sifilis %>% 
   filter(anio==2018|anio==2020, id_sexo==3,
          id_jurisdiccion!=200) %>% 
   spread(anio, jurisdiccion_tasa_sifilis)
 
-head(tasas)
+DT::datatable(head(tasas))
+
 ```
 
 Leo mapa de argentina en formato RDS:
@@ -293,9 +283,7 @@ mapa_arg <- sf::st_transform(mapa_arg, 5345)## EPSG:5345  posgar 2007/ Argentina
 ggplot(data = mapa_arg) +
     geom_sf(crs=5345)
 ```
-
-
-Unimos tabla de tasas con mapa:
+Unimos tabla de tasas con mapa.
 
 ```{r message=FALSE, warning=FALSE}
 tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
@@ -303,17 +291,8 @@ tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos A
 table(mapa_arg$NAME_1)
 
 mapa_arg <- dplyr::left_join(mapa_arg, tasas, by = c("NAME_1"="jurisdiccion"))
-names(mapa_arg) 
-class(mapa_arg)
-
-#mapa_arg_json <- sf_geojson(mapa_arg)
 ```
 
-
-```{r eval=FALSE, include=FALSE}
-# highchart(type = "map") %>% 
-#   hc_add_series_map(map = mapa_arg_json, df = dfita1, joinBy = "id", value = "length") 
-```
 
 ```{r message=FALSE, warning=FALSE}
 tmap_mode("view")
