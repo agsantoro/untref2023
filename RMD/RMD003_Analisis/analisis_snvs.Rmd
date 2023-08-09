@@ -135,6 +135,7 @@ data_grafico$conteo[is.na(data_grafico$conteo)] = 0
 DT::datatable(grid)
 
 ```
+
 Usando la tabla *data_grafico* se puede elaborarar el gráfico.
 
 ```{r}
@@ -160,7 +161,7 @@ grafico
 ```   
 
 
-Puedo cambiar el tema. Es esta [página](https://jkunst.com/highcharter/articles/themes.html)) tengo modelos-
+Puedo cambiar el tema. Es esta [página](https://jkunst.com/highcharter/articles/themes.html) tengo modelos.
 ```{r message=FALSE, warning=FALSE}
 ##https://jkunst.com/highcharter/articles/themes.html#themes-19
 grafico %>% 
