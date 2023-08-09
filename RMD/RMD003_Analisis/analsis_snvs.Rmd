@@ -9,10 +9,13 @@ code_folding: show
 En este documento se presentan tres análisis con graficos interactivos para realizar con datos de Eventos de Notificación obligatoria provenientes de Datos Abiertos. 
 
 Para las visualizaciones interactivas se utilizaron los paquetes *highcharter*, *echarts4r* y *Leaflet*.
-
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy('')
+```
 # Instalación de paquetes y lectura de datos:
 
 ```{r message=FALSE, warning=FALSE}
+
 library(readxl)
 library(tidyverse)
 library(ISOweek)
@@ -97,6 +100,10 @@ plotdata <- datos_eti%>%
 
 ```{r}
 #remotes::install_github("JohnCoene/echarts4r")
+
+ts_base = datos_eti %>%
+  group_by(provincia_nombre,semana) %>% summarise(conteo=sum(conteo))
+
 ts_base <- datos_eti %>%
   filter(
     provincia_nombre %in% c("Buenos Aires",
@@ -116,6 +123,42 @@ ts_base <- datos_eti %>%
 
 ts_base %>% e_line(conteo)
 ```
+
+```{r}
+ts_base = datos_eti %>%
+  group_by(provincia_nombre, semana) %>% summarise(conteo = sum(conteo))
+ts_base$semana = as.character(ts_base$semana)
+
+grid = list(
+  provincia_nombre = unique(ts_base$provincia_nombre),
+  semana = unique(as.character(ts_base$semana))
+)
+
+grid = expand.grid(grid)
+data_grafico = left_join(grid, ts_base %>% as.data.frame)
+data_grafico$conteo[is.na(data_grafico$conteo)] = 0
+```
+
+```{r}
+grafico =
+  highchart() %>%
+  hc_chart(type = "line",
+           zoomType = 'xy') %>%
+  hc_title(text = "Notificaciones de ETI por SEPI") %>%
+  hc_xAxis(categories = data_grafico$semana) %>%
+  hc_yAxis(title = list(text = "Notificaciones"))
+
+provincias_seleccionadas = c("Buenos Aires", "Córdoba", "CABA", "Santa Fe", "Mendoza")
+
+for (i in provincias_seleccionadas) {
+  conteo = data_grafico$conteo[data_grafico$provincia_nombre == i]
+  grafico = grafico %>% hc_add_series(name = i, data = conteo)
+}
+
+grafico
+```
+
+
 
 # Graficos combinados
 
@@ -160,7 +203,6 @@ barras <- datos_respiratorias %>%
 
 torta
 head(barras)
-
 ```
 
 Codigo para el grafico:
