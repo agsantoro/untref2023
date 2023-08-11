@@ -14,6 +14,16 @@ link-citations: true
 theme: united
 ---
 
+
+
+```{r klippy, echo=FALSE, include=TRUE}
+library(klippy)
+klippy::klippy(position=c("top","right"),
+               tooltip_message = "Copiar código",
+               tooltip_success = "Copiado!",
+               color = "#636363")
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

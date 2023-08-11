@@ -105,9 +105,10 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
    [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
 
 ### Materiales CLASE 2
-<!---
-[Documento para procesar poblaciones](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
- -->
+   [Procesamiento de datos de población](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
+
+[Analisis de Eventos de Notificación Obligatoria](https://agsantoro.github.io/untref2023/RMD/RMD003_Analisis/analisis_snvs.html)
+
 
 ### Bibliografía
 
@@ -115,3 +116,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 ### Enlaces útiles
 [Reporte interactivo de estadísticas de salud -DEIS](https://www.argentina.gob.ar/salud/deis/reporte-interactivo)
+
+[Highcharts for R users](https://www.highcharts.com/blog/tutorials/highcharts-for-r-users/)
+
+[Google Sheet de la clase](https://docs.google.com/spreadsheets/d/1tZcvm0YulT59IU41TaZJGcwQ6iVRjpaYuxCTH3YQE_Q/edit#gid=0)
+
