@@ -106,7 +106,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 ### Materiales CLASE 2
 [Procesamiento de datos de población (jurisdicciones)](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
-[Procesamiento de datos de población (departamentos)](https://agsantoro.github.io/untref2023/RMD/RMD004_Poblacion/03_ProyeccionesDepartamentos.html)
+
+[Procesamiento de datos de población (departamentos)](https://agsantoro.github.io/untref2023/RMD/RMD004_Deptos/03_ProyeccionesDepartamentos.html)
 
 [Analisis de Eventos de Notificación Obligatoria](https://agsantoro.github.io/untref2023/RMD/RMD003_Analisis/analisis_snvs.html)
 
