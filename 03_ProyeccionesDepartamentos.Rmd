@@ -68,7 +68,7 @@ instalar("foreign")
 instalar("stringr")
 ```
 ### 2- Crear tabla de códigos
-Vamos a crear una tabla con los códigos de cada departamento ya que los archivos originales sólo tienen el nombre. **Es importante tener en cuenta que para vincular esta información con otra fuente de datos oficiales, necesitaremos los códigos de departamento.** El indec publica estas tablas de códigos geográficos en formato .pdf lo que imposibilita trabajar esta información con softwares de datos.
+Vamos a crear una tabla con los códigos de cada departamento ya que los archivos originales sólo tienen el nombre. **Es importante tener en cuenta que para vincular esta información con otra fuente de datos oficiales, necesitaremos los códigos de departamento.** El INDEC publica estas tablas de códigos geográficos en formato .pdf lo que imposibilita trabajar esta información con softwares de datos.
 Una solución posible es extraer la codificación y descripción de cada área grográfica de la cartografía digital que disponibiliza el instituto en formato shape, debido a que proviniendo del mismo instituto, los nombres utilizados debieran coincidir, lo que permitiría recuperar los códigos a través del matcheo de nombre.
 La cartografía en formato shape está compuesta por una carpeta que contiene varios archivos con información de diferente tipo. Uno de ellos tiene formato .dbf y almacena la información que permite vincular cada polígono del mapa a un conjunto de datos. Allí contamos con la identificación de cada departamento.
 
@@ -326,39 +326,6 @@ instalar("DT")
 DT::datatable(proyecciones_depto)
 ```
 
-```{r eval=FALSE, include=FALSE}
-instalar("shiny")
-instalar("highcharter")
-shinyApp(
-  
-  ui = fluidPage(
-    selectInput("ano", "Seleccionar año:",
-                choices = unique(proyecciones_depto$ano)),
-    selectInput("juri", "Seleccionar jurisdicción:",
-                choices = unique(proyecciones_depto$juri_nombre)),
-    selectInput("sexo", "Seleccionar sexo:",
-                choices = unique(proyecciones_depto$sexo_nombre)),
-    highchartOutput("plot")
-  ),
-  
-  server = function(input, output) {
-    output$plot = renderHighchart({
-      data_plot = proyecciones_depto[proyecciones_depto$ano==input$ano &
-                                     proyecciones_depto$juri_nombre==input$juri &
-                                     proyecciones_depto$sexo_nombre==input$sexo ,] %>% arrange(desc(poblacion)) %>% as.data.frame()
-      
-      hchart(data_plot, "bar", hcaes(x = departamento_nombre, y = poblacion)) %>%
-        hc_title(text = paste0("Población de ",input$juri,". Año ",input$ano)) %>%
-        hc_xAxis(title = list(text = "Departamento")) %>%
-        hc_yAxis(title = list(text = "Población"))
-      
-    })
-  },
-  
-  options = list(height = 500)
-)
-
-```
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 unlink("archivos_proyecciones", recursive = TRUE)
