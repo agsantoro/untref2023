@@ -374,23 +374,24 @@ torta <- summarized_df %>%
 torta <- torta %>%
   mutate(
     grupo_edad = case_when(
-      grupo_edad_id == 1 ~ "1. < 6 m",
-      grupo_edad_id == 2 ~ "2. 6 a 11 m",
-      grupo_edad_id == 6 ~ "6. 10 a 14",
-      grupo_edad_id == 3 ~ "3. 12 a 23 m",
-      grupo_edad_id == 7 ~ "7. 15 a 19",
-      grupo_edad_id == 4 ~ "4. 2 a 4",
-      grupo_edad_id == 8 ~ "8. 20 a 24",
-      grupo_edad_id == 9~ "9. 25 a 34",
-      grupo_edad_id == 10 ~ "10. 35 a 44",
-      grupo_edad_id == 11 ~ "11. 45 a 64",
-      grupo_edad_id == 5~ "5. 5 a 9",
-      grupo_edad_id == 12 ~ "12. 65 a 74",
-      grupo_edad_id == 13 ~ "13. >= a 75",
-      grupo_edad_id == 17~ "14. Edad Sin Esp.",
+      grupo_edad_id == 1 ~ "1. Menor de 4 años",
+      grupo_edad_id == 2 ~ "1. Menor de 4 años",
+      grupo_edad_id == 6 ~ "3. 10 a 14",
+      grupo_edad_id == 3 ~ "1. Menor de 4 años",
+      grupo_edad_id == 7 ~ "4. 15 a 19",
+      grupo_edad_id == 4 ~ "1. Menor de 4 años",
+      grupo_edad_id == 8 ~ "5. 20 a 64",
+      grupo_edad_id == 9~ "5. 20 a 64",
+      grupo_edad_id == 10 ~ "5. 20 a 64",
+      grupo_edad_id == 11 ~ "5. 20 a 64",
+      grupo_edad_id == 5~ "2. 5 a 9",
+      grupo_edad_id == 12 ~ "6. más de 65",
+      grupo_edad_id == 13 ~ "6. más de 65",
+      grupo_edad_id == 17~ "7. Edad Sin Esp.",
       TRUE ~ as.character(grupo_edad_id)
     )
-  ) %>%
+  ) %>% group_by(grupo_edad) %>% 
+  summarise(porcent=sum(porcent)) %>% 
   arrange(as.numeric(substring(grupo_edad, 1, 2)))
 
 # armo tabla de n para el gráfico de barras
@@ -402,14 +403,12 @@ barras <- summarized_df %>%
 
 # asi quedaron ambas tablas
 DT::datatable(torta)
-DT::datatable(head(barras))
 ```
 
 Código para el gráfico:
 
 ```{r}
-
-highchart() %>%
+chart1 <- highchart() %>%
   hc_add_series(# agrego serie para barras
     barras,
     "column", hcaes(
@@ -421,7 +420,7 @@ highchart() %>%
     torta, "pie", hcaes(
       name = grupo_edad, y = porcent
     ),
-    name = "Casos de ETI (%)"
+    name = "Casos de ETI por grupo de edad (%)"
   ) %>%
   ## en ociones puedo definir como quiero ver los labels,y la ubicacion y tamaño
   hc_plotOptions(
@@ -457,15 +456,115 @@ highchart() %>%
     text = "Grafico de barras combinado con piechart: Notificaciones de ETI, 2022"
   ) %>%
   hc_subtitle(
-    text = "Ejemplo de grafico combinado para notificaciones de eti por semana y grupo de edad"
+    text = "Ejemplo de grafico combinado para notificaciones de eti por semana y gráfico de torta por grupo de edad"
   ) %>%
   hc_caption(
     text = "Se representatan casos notificados de ETI al SNVS 2.0"
   ) %>%
   hc_credits(
     enabled = TRUE, text = "Fuente: Datos abiertos/ SNVS", href = "http://datos.salud.gob.ar/", style = list(fontSize = "12px")
-  ) 
+  ) %>% 
+    hc_exporting(enabled = TRUE) # enable exporting option
+chart1
+
 ```
+
+Un alternativa:
+
+```{r}
+
+#armo tabla de porcentajes para grafico de torta
+barras_apiladas <- summarized_df %>%
+  filter(ano == 2022) %>%
+  group_by(grupo_edad_id, semanas_epidemiologicas) %>%
+  summarise(casos = sum(max_casos)) %>%
+  group_by(semanas_epidemiologicas) %>% 
+  mutate(porcent = round(casos / sum(casos) * 100, 1))
+
+#ordeno las categorias de grupos de edad para que esten de menor a mayor
+barras_apiladas <- barras_apiladas %>%
+  mutate(
+    grupo_edad = case_when(
+      grupo_edad_id == 1 ~ "1. < 6 m",
+      grupo_edad_id == 2 ~ "2. 6 a 11 m",
+      grupo_edad_id == 6 ~ "6. 10 a 14",
+      grupo_edad_id == 3 ~ "3. 12 a 23 m",
+      grupo_edad_id == 7 ~ "7. 15 a 19",
+      grupo_edad_id == 4 ~ "4. 2 a 4",
+      grupo_edad_id == 8 ~ "8. 20 a 24",
+      grupo_edad_id == 9~ "9. 25 a 34",
+      grupo_edad_id == 10 ~ "10. 35 a 44",
+      grupo_edad_id == 11 ~ "11. 45 a 64",
+      grupo_edad_id == 5~ "5. 5 a 9",
+      grupo_edad_id == 12 ~ "12. 65 a 74",
+      grupo_edad_id == 13 ~ "13. >= a 75",
+      grupo_edad_id == 17~ "14. Edad Sin Esp.",
+      TRUE ~ as.character(grupo_edad_id)
+    )
+  ) %>%
+  arrange(as.numeric(substring(grupo_edad, 1, 2))) %>% 
+  arrange( semanas_epidemiologicas,grupo_edad)
+
+bar_chart <- highchart() %>%
+  hc_xAxis(categories = unique(barras_apiladas$semanas_epidemiologicas),title = list(text = "Semana Epidemiológica")) %>%
+  hc_add_series(
+    data = barras_apiladas,
+    type = "column",
+    hcaes(x = semanas_epidemiologicas, y = porcent, group = grupo_edad,
+          name= grupo_edad),
+    stacking = "percent",  # Apilar al 100%
+    
+  ) %>%
+
+  hc_tooltip(
+    headerFormat = "",
+    pointFormat = "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.1f}%</b>"
+  )%>% 
+   hc_size(height = 300, width = 100) %>% 
+  hc_legend(itemStyle = list(fontSize = "7px")) %>%  # Cambiar el tamaño de la leyenda
+    hc_exporting(enabled = TRUE) # enable exporting optio
+
+# Mostrar el gráfico de barras apiladas al 100%
+chart2 <- highchart() %>%
+  hc_add_series(# agrego serie para barras
+    barras,
+    "column", hcaes(
+      x = semanas_epidemiologicas, y = casos
+    ),
+    name = "Casos de ETI"
+  ) %>%
+  ## en ociones puedo definir como quiero ver los labels,y la ubicacion y tamaño
+  hc_plotOptions(
+    series = list(
+      showInLegend = FALSE,
+      pointFormat = "{point.y}%",
+      colorByPoint = FALSE
+    ), 
+   
+    column = list(groupPadding = 0,#características de las barras
+                  pointPadding = 0,
+                  borderWidth = 0.3,
+                  borderColor = "white",# color de los bordes
+                  color= "#377eb8" #color de la barrra
+                  )
+  )%>%
+  ## Axis
+  hc_yAxis(
+    title = list(text = "Número de casos"),
+    labels = list(format = "{value}"),
+    max = 30000
+  ) %>%
+  hc_xAxis(title = list(text = "Semana EPI"),
+      categories = barras$semanas_epidemiologicas
+  ) %>%
+  hc_size(height = 200, width = 500) %>% 
+ 
+    hc_exporting(enabled = TRUE) # enable exporting option
+
+### los uno en un grid
+hw_grid(list(chart2, bar_chart), ncol=2,rowheight=300)
+```
+
 
 # Mapas
 
@@ -514,4 +613,6 @@ tm_shape(mapa_arg) +
     tm_polygons(c("2018", "2020"), n=4, style="jenks") +
     tm_facets(sync = TRUE, ncol = 2)
 ```
+
+
 
