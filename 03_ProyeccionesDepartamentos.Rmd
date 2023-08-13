@@ -3,7 +3,6 @@ title: "Procesamiento de proyecciones de población por departamentos de Argenti
 author: 
  - Adrián Santoro^[adrian.santoro@gmail.com]
 date: "`r Sys.Date()`"
-runtime: shiny
 output: 
   html_document:
     theme: united
@@ -327,7 +326,7 @@ instalar("DT")
 DT::datatable(proyecciones_depto)
 ```
 
-```{r, echo=FALSE}
+```{r eval=FALSE, include=FALSE}
 instalar("shiny")
 instalar("highcharter")
 shinyApp(
@@ -364,6 +363,10 @@ shinyApp(
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 unlink("archivos_proyecciones", recursive = TRUE)
 ```
+
+## Conclusiones
+
+El formato en el cuales se accede a la información sobre proyecciones de población de Argentina por departamentos resulta poco amigable para los procesamientos con herramientas informáticas. Este documento muestra una metodología sencilla para dar a esos datos un formato acorde a la ciencia de datos que aumenta las posibilidades de uso de esta información en casos que requieren procesamientos complejos (series temporales, cálculo de indicadores en lote, desarrollo de visualizaciones, elaboración de mapas, etc.). El software estadístico R [@R-base] se presenta como una alternativa eficiente para esta tarea.
 
 
 ### Referencias
