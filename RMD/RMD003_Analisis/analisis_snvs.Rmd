@@ -503,10 +503,13 @@ barras_apiladas <- barras_apiladas %>%
     )
   ) %>%
   arrange(as.numeric(substring(grupo_edad, 1, 2))) %>% 
-  arrange( semanas_epidemiologicas,grupo_edad)
+  mutate(grupo_edad = grupo_edad %>% fct_reorder(grupo_edad_id, .desc = FALSE))
 
 bar_chart <- highchart() %>%
-  hc_xAxis(categories = unique(barras_apiladas$semanas_epidemiologicas),title = list(text = "Semana Epidemiológica")) %>%
+  hc_xAxis(categories = unique(barras_apiladas$semanas_epidemiologicas),title = list(text = "Semana Epidemiológica"),title = list(text = "Semana EPI")) %>%
+  hc_yAxis(
+    title = list(text = "%")
+  ) %>%  
   hc_add_series(
     data = barras_apiladas,
     type = "column",
@@ -520,9 +523,18 @@ bar_chart <- highchart() %>%
     headerFormat = "",
     pointFormat = "<span style=\"color:{point.color}\">\u25CF</span> {series.name}: <b>{point.y:.1f}%</b>"
   )%>% 
-   hc_size(height = 300, width = 100) %>% 
+  hc_plotOptions(
+    
+    column = list(groupPadding = 0,#características de las barras
+                  pointPadding = 0,
+                  borderWidth = 0.3,
+                  borderColor = "white",
+                  stacking = TRUE)
+  ) %>% 
+   hc_size(height = 300, width =500) %>% 
   hc_legend(itemStyle = list(fontSize = "7px")) %>%  # Cambiar el tamaño de la leyenda
     hc_exporting(enabled = TRUE) # enable exporting optio
+
 
 # Mostrar el gráfico de barras apiladas al 100%
 chart2 <- highchart() %>%
@@ -535,6 +547,7 @@ chart2 <- highchart() %>%
   ) %>%
   ## en ociones puedo definir como quiero ver los labels,y la ubicacion y tamaño
   hc_plotOptions(
+    
     series = list(
       showInLegend = FALSE,
       pointFormat = "{point.y}%",
@@ -557,12 +570,12 @@ chart2 <- highchart() %>%
   hc_xAxis(title = list(text = "Semana EPI"),
       categories = barras$semanas_epidemiologicas
   ) %>%
-  hc_size(height = 200, width = 500) %>% 
+  hc_size(height = 300, width = 800) %>% 
  
     hc_exporting(enabled = TRUE) # enable exporting option
 
 ### los uno en un grid
-hw_grid(list(chart2, bar_chart), ncol=2,rowheight=300)
+hw_grid(list(chart2, bar_chart), ncol=1,rowheight=300)
 ```
 
 
