@@ -9,7 +9,7 @@ output:
     toc: yes
     toc_float:
       collapsed: true
-bibliography: RMD/RMD004_Deptos/references.bib
+bibliography: references.bib
 link-citations: true
 
 ---
