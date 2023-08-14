@@ -12,6 +12,7 @@ output:
 bibliography: references.bib
 link-citations: true
 theme: united
+runtime: shiny
 ---
 
 
@@ -322,6 +323,26 @@ knitr::include_graphics("images/shinyApp.gif")
 ## Conclusiones
 
 Los formatos en los cuales se puede acceder a la información sobre proyecciones de población de Argentina resultan poco amigables para los procesamientos con herramientas informáticas. Este documento muestra una metodología sencilla para dar a esos datos un formato acorde a la ciencia de datos que aumenta las posibilidades de uso de esta información en casos que requieren procesamientos complejos (series temporales, cálculo de indicadores en lote, desarrollo de visualizaciones, etc.). El software estadístico R [@R-base] se presenta como una alternativa eficiente para esta tarea.
+
+```{r, echo=FALSE}
+shinyApp(
+
+  ui = fluidPage(
+    selectInput("region", "Region:",
+                choices = colnames(WorldPhones)),
+    plotOutput("phonePlot")
+  ),
+
+  server = function(input, output) {
+    output$phonePlot = renderPlot({
+      barplot(WorldPhones[,input$region]*1000,
+              ylab = "Number of Telephones", xlab = "Year")
+    })
+  },
+
+  options = list(height = 500)
+)
+```
 
 ## Referencias
 
