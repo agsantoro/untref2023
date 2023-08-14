@@ -3,13 +3,13 @@ title: "Procesamiento de proyecciones de población por departamentos de Argenti
 author: 
  - Adrián Santoro^[adrian.santoro@gmail.com]
 date: "`r Sys.Date()`"
-runtime: shiny
 output: 
   html_document:
     theme: cosmo
     toc: yes
     toc_float:
       collapsed: true
+bibliography: RMD/RMD004_Deptos/references.bib
 link-citations: true
 
 ---
@@ -42,7 +42,7 @@ El formato de la publicación resulta poco amigable para docentes, investigadore
 
 ## Objetivo
 
-El objetivo de este documento es presentar una forma programática de procesamiento de las proyecciones de poblacion por departamento 2010-2025 publicadas por el INDEC, usando el software estadístico R [@R-base] con sus librerías dplyr [@dplyr], shiny [@Shiny], openxlsx y readxl [@readxl].
+El objetivo de este documento es presentar una forma programática de procesamiento de las proyecciones de poblacion por departamento 2010-2025 publicadas por el INDEC, usando el software estadístico R [@R-base] con sus librerías dplyr [@dplyr], glue [@glue], foreign [@foreign] y stringr [@stringr], webdriver [@webdriver], rvest [@rvest], tidyverse [@tidyverse], DT [@DT], highcharter [@highcharter].
 
 <br/>
 
@@ -68,7 +68,7 @@ instalar("foreign")
 instalar("stringr")
 ```
 ### 2- Crear tabla de códigos
-Vamos a crear una tabla con los códigos de cada departamento ya que los archivos originales sólo tienen el nombre. **Es importante tener en cuenta que para vincular esta información con otra fuente de datos oficiales, necesitaremos los códigos de departamento.** El indec publica estas tablas de códigos geográficos en formato .pdf lo que imposibilita trabajar esta información con softwares de datos.
+Vamos a crear una tabla con los códigos de cada departamento ya que los archivos originales sólo tienen el nombre. **Es importante tener en cuenta que para vincular esta información con otra fuente de datos oficiales, necesitaremos los códigos de departamento.** El INDEC publica estas tablas de códigos geográficos en formato .pdf lo que imposibilita trabajar esta información con softwares de datos.
 Una solución posible es extraer la codificación y descripción de cada área grográfica de la cartografía digital que disponibiliza el instituto en formato shape, debido a que proviniendo del mismo instituto, los nombres utilizados debieran coincidir, lo que permitiría recuperar los códigos a través del matcheo de nombre.
 La cartografía en formato shape está compuesta por una carpeta que contiene varios archivos con información de diferente tipo. Uno de ellos tiene formato .dbf y almacena la información que permite vincular cada polígono del mapa a un conjunto de datos. Allí contamos con la identificación de cada departamento.
 
@@ -122,7 +122,7 @@ En primer lugar vamos a descargar los archivos pogramáticamente. Para esto vamo
 Extraer links de una página web es una tarea relativamente fácil que puede hacerse con el paquete rvest. Por ejemplo, podemos extraer todos los links de la página principal de la UNTREF.
 
 ```{r}
-library(rvest)
+instalar("rvest")
 url = 'https://untref.edu.ar/'
 pagina_web = read_html(url)
 links = pagina_web %>% html_nodes("a") %>% html_attr("href") 
@@ -274,7 +274,7 @@ for (i in 1:length(rutas_a_archivos)) { # recorre los 24 archivos descargados
 
 Verificamos que el procedimiento verificando que la información del año 2010 para el total del país coincide con la que se observa en el archivo de proyecciones provinciales
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 url_prov = "https://www.indec.gob.ar/ftp/cuadros/poblacion/c2_proyecciones_prov_2010_2040.xls"
 
 # descarga el archivo de las proyecciones jurisdiccionales a través de la línea de comandos de Windows debido a que la función download.file suele fallar con archivos .xls
@@ -300,7 +300,7 @@ total_argentina_2010_depto == total_argentina_2010_prov
 
 Vamos a utilizar ahora la tabla de códigos que generamos anteriormente para vincularla a través de los nombres de las áreas geográficas de los datos procesados y recuperar los códigos.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 # vincula ambas fuentes
 proyecciones_depto = left_join(proyecciones_depto,codigos, by = c("juri_nombre","departamento_nombre"))
 
@@ -314,49 +314,27 @@ proyecciones_depto$sexo_codigo[proyecciones_depto$sexo_nombre == "Varones"] = "1
 proyecciones_depto$sexo_codigo[proyecciones_depto$sexo_nombre == "Mujeres"] = "2"
 
 # pasa años a filas
-library(tidyverse)
+instalar("tidyverse")
 proyecciones_depto$a_2025 = as.numeric(proyecciones_depto$a_2025) # pasa a numérica ya que se almacena originalmente como character debido al formato de los archivos originales
 
 proyecciones_depto = proyecciones_depto %>% pivot_longer(cols = 4:19, names_to = "ano", values_to = "poblacion")
 
-library(stringr)
+instalar("stringr")
 proyecciones_depto$ano = str_replace_all(proyecciones_depto$ano,"a_","") # elimina prefijo "a_"
 
-library(DT)
+instalar("DT")
 DT::datatable(proyecciones_depto)
 ```
 
-```{r, echo=FALSE}
-library(shiny)
-library(highcharter)
-shinyApp(
-  
-  ui = fluidPage(
-    selectInput("ano", "Seleccionar año:",
-                choices = unique(proyecciones_depto$ano)),
-    selectInput("juri", "Seleccionar jurisdicción:",
-                choices = unique(proyecciones_depto$juri_nombre)),
-    selectInput("sexo", "Seleccionar sexo:",
-                choices = unique(proyecciones_depto$sexo_nombre)),
-    highchartOutput("plot")
-  ),
-  
-  server = function(input, output) {
-    output$plot = renderHighchart({
-      data_plot = proyecciones_depto[proyecciones_depto$ano==input$ano &
-                                     proyecciones_depto$juri_nombre==input$juri &
-                                     proyecciones_depto$sexo_nombre==input$sexo ,] %>% arrange(desc(poblacion)) %>% as.data.frame()
-      
-      hchart(data_plot, "bar", hcaes(x = departamento_nombre, y = poblacion)) %>%
-        hc_title(text = paste0("Población de ",input$juri,". Año ",input$ano)) %>%
-        hc_xAxis(title = list(text = "Departamento")) %>%
-        hc_yAxis(title = list(text = "Población"))
-      
-    })
-  },
-  
-  options = list(height = 500)
-)
 
+```{r message=FALSE, warning=FALSE, include=FALSE}
+unlink("archivos_proyecciones", recursive = TRUE)
 ```
 
+## Conclusiones
+
+El formato en el cuales se accede a la información sobre proyecciones de población de Argentina por departamentos resulta poco amigable para los procesamientos con herramientas informáticas. Este documento muestra una metodología sencilla para dar a esos datos un formato acorde a la ciencia de datos que aumenta las posibilidades de uso de esta información en casos que requieren procesamientos complejos (series temporales, cálculo de indicadores en lote, desarrollo de visualizaciones, elaboración de mapas, etc.). El software estadístico R [@R-base] se presenta como una alternativa eficiente para esta tarea.
+
+
+
+## Referencias
