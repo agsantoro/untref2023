@@ -26,6 +26,7 @@ klippy::klippy(position=c("top","right"),
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 ## Proyecciones de población
