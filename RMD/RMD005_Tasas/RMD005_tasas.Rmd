@@ -1,0 +1,76 @@
+---
+title: "Procesamiento de datos de mortalidad y cálculo de tasas en lote"
+author: 
+ - Adrián Santoro^[adrian.santoro@gmail.com]
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: united
+    toc: yes
+    toc_float:
+      collapsed: true
+bibliography: references.bib
+link-citations: true
+
+---
+
+```{r klippy, echo=FALSE, include=TRUE}
+library(klippy)
+klippy::klippy(position=c("top","right"),
+               tooltip_message = "Copiar código",
+               tooltip_success = "Copiado!",
+               color = "#636363")
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introducción
+
+Las tasas crudas, específicas y ajustadas de mortalidad son dos de los indicadores más utilizados en epidemiología. Sirven para hacer comparaciones entre diferentes poblaciones y series temporales.
+
+El procedimiento para el cálculo de tasas de mortalidad es sencillo, sin embargo, al tener denominador y numerador fuentes de información distintas, requiere habitualmente el cumplimiento de ciertos pasos: obtención de la información, adaptación de los formatos, homologación de categorías, etc. Estas tareas suelen ser tediosas y aumentan la probabilidad de cometer errores. Por otro lado, cuando los cálculos deben hacerse para una multiplicidad de áreas geográficas o años, suelen ser poco eficientes. 
+
+## Objetivo
+
+El objetivo de este documento es presentar una forma programática cálculo de tasas de mortalidad por año, jurisdicción, sexo y causa para Argentina en el período 2010-2021.
+
+## Desarrollo
+
+### 1- Descarga de los datos
+
+En el portal de Datos Abiertos se encuentra disponible un dataset de defunciones ocurridas y registradas en Argentina para el período 2005-2021. En este archivo las muertes están clasificadas por una serie de variables y en la columna "cantidad" presenta una cuenta de defunciones para la combinación de categorías de cada fila.
+
+Descargamos el archivo.
+
+```{r message=FALSE, warning=FALSE}
+options(timeout=1000000) # incrementamos el timeout debido a que la descarga es lenta
+# url = "http://datos.salud.gob.ar/dataset/27c588e8-43d0-411a-a40c-7ecc563c2c9f/resource/fab9e990-865c-43c4-a643-3dbc3b70a934/download/defunciones-ocurridas-y-registradas-en-la-republica-argentina-anos-2005-2021.csv"
+# download.file(url, destfile = "defunciones.csv")
+defunciones = read.csv("defunciones.csv", encoding = "latin1")
+```
+
+### 2- Procesamiento de la información de mortalidad
+
+El archivo de defunciones tiene 778.353 registros. Debido a que vamos a utilizar sólo el período 2010-2021, eliminamos los años anteriores.
+
+```{r message=FALSE, warning=FALSE}
+defunciones = defunciones[defunciones$anio >= 2010,] 
+
+# observamos la estructura del data frame
+str(defunciones)
+
+# eliminamos las variables cie10_causa_id, muerte_materna_id y muerte_materna_clasificacion que no vamos a usar
+
+defunciones$cie10_causa_id = NULL
+defunciones$muerte_materna_id = NULL
+defunciones$muerte_materna_clasificacion = NULL
+
+```
+
+Podemos observar que en este archivo las edades están agrupadas de en grupos amplios que no coinciden con los que utiliza generalmente el INDEC (quinquenales).
+
+Si observamos el documento ["Procesamiento de proyecciones de población de Argentina 2010-2040 (INDEC)"](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html))
+
+

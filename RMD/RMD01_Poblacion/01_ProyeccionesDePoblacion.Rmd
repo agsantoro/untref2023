@@ -328,6 +328,7 @@ Los formatos en los cuales se puede acceder a la información sobre proyecciones
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 unlink("poblacion.xls")
+write.csv(resultado,"problacion_prov.csv")
 ```
 
 
