@@ -323,10 +323,12 @@ knitr::include_graphics("images/shinyApp.gif")
 
 Los formatos en los cuales se puede acceder a la información sobre proyecciones de población de Argentina resultan poco amigables para los procesamientos con herramientas informáticas. Este documento muestra una metodología sencilla para dar a esos datos un formato acorde a la ciencia de datos que aumenta las posibilidades de uso de esta información en casos que requieren procesamientos complejos (series temporales, cálculo de indicadores en lote, desarrollo de visualizaciones, etc.). El software estadístico R [@R-base] se presenta como una alternativa eficiente para esta tarea.
 
+
 ## Referencias
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 unlink("poblacion.xls")
+write.csv(resultado,"problacion_prov.csv")
 ```
 
 

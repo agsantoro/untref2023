@@ -29,11 +29,9 @@ download.file(url, destfile = "mapa_deptos.zip")
 unzip("mapa_deptos.zip",exdir = "mapa_deptos")
 unlink("mapa_deptos.zip")
 
-# Ahora vamos a buscar el nombre del archivo .dbf que contiene la carpeta
+# Ahora vamos a buscar el nombre del archivo .dbf que contiene la carpeta e importarlo en un data frame.
 nombres_archivos = list.files("mapa_deptos")
 nombre_dbf = nombres_archivos[grep("dbf",nombres_archivos)]
-
-# Una vez identificado el archivo lo importamos en un data frame
 codigos = foreign::read.dbf(glue("mapa_deptos/{nombre_dbf}"))
 
 # La columna 'link' contiene la información que necesitamos. Las primeras dos posiciones representan el código de la jurisdicción y las tres siguientes el del departamento. Generamos la tabla de códigos, incluyendo los nombres de jurisdicción y departamento.
@@ -50,7 +48,7 @@ codigos$departamento_nombre = str_replace_all(codigos$departamento_nombre, "Comu
 
 # Las proyecciones por departamento se presentan en 24 archivos (uno para cada jurisdicción).
 # En primer lugar vamos a descargar los archivos pogramáticamente. Para esto vamos  necesitar extraer los links a esos archivos y descargarlo.
-# Extraer links de una página web es una tarea relativamente fácil que puede hacerse con el paquete rvest. Por ejemplo, podemos extraer todos los links del portal de datos abiertos de Argentina. 
+# Extraer links de una página web es una tarea relativamente fácil que puede hacerse con el paquete rvest. Por ejemplo, podemos extraer todos los links del portal de datos abiertos de Argentina.
 
 library(rvest)
 url = 'https://untref.edu.ar/'
@@ -62,6 +60,7 @@ head(links)
 # Para el caso de la web del INDEC esta metodología sencilla no funciona, ya que los links aparecen ocultos debido a la forma en la que está programada la página. Por eso, debemos usar la librería webdriver que nos permite ejecutar un navegador virtual que cargue la página por completo y extraiga el código html tal cual lo muestra el navegador, de la misma forma que lo haríams manualmente con Google Chrome usando la opción guardar como html la página.
 
 instalar("webdriver")
+#install_phantomjs() # sólo correr esta línea la primera vez que se use webdriver
 pjs <- run_phantomjs()
 ses <- Session$new(port = pjs$port)
 ses$go("https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-24-119")
@@ -81,7 +80,7 @@ links = gsub("\\s+$", "", links)
 links = data.frame(juri = links, links=links1)
 head(links)
 
-# Descargamos los archivos
+# Creamos una carpeta llamada 'archivos_proyecciones' donde vamos a alojar los 24 archivos descargados.
 
 dir.create("archivos_proyecciones")
 
@@ -123,13 +122,13 @@ for (i in 1:length(rutas_a_archivos)) {
     if (length(valor)>0) {if(valor=="Total") {break}} 
   }
   
-  #browser(expr = {prov=="La Pampa"}) 
+  #browser(expr = {prov=="Buenos Aires"}) 
   if (prov == "Buenos Aires") {
     fin_bloque_1 = comienzo_bloque_1 + j -9
-    comienzo_bloque_2 = fin_bloque_1 + 10
-    fin_bloque_2 = comienzo_bloque_2 + j -8
-    comienzo_bloque_3 = fin_bloque_2 + 10
-    fin_bloque_3 = comienzo_bloque_3 + j -8
+    comienzo_bloque_2 = fin_bloque_1 + 11
+    fin_bloque_2 = comienzo_bloque_2 + j -9
+    comienzo_bloque_3 = fin_bloque_2 + 11
+    fin_bloque_3 = comienzo_bloque_3 + j -9
   } else if (prov == "La Pampa") {
     fin_bloque_1 = comienzo_bloque_1 + j -9
     comienzo_bloque_2 = fin_bloque_1 + 10
@@ -166,7 +165,7 @@ for (i in 1:length(rutas_a_archivos)) {
   datos$sexo_nombre = c(rep("Ambos sexos", nrow(datos)/3),
                         rep("Varones", nrow(datos)/3),
                         rep("Mujeres", nrow(datos)/3))
-  departamento_nombre = unique(read_xls(rutas_a_archivos[i], range = glue("A{comienzo_bloque_1}:A{fin_bloque_3}")))
+  departamento_nombre = unique(read_xls(rutas_a_archivos[i], range = glue("A{comienzo_bloque_1}:A{fin_bloque_3}"), col_names = F))
   departamento_nombre = departamento_nombre[is.na(departamento_nombre)==F]
   departamento_nombre = departamento_nombre[departamento_nombre!="Interior de la Provincia"]
   departamento_nombre = departamento_nombre[departamento_nombre!="24 Partidos del GBA"]
@@ -187,8 +186,8 @@ for (i in 1:length(rutas_a_archivos)) {
 
 url_prov = "https://www.indec.gob.ar/ftp/cuadros/poblacion/c2_proyecciones_prov_2010_2040.xls"
 system(glue('curl -o poblacion.xls {url_prov}'))
-
-total_argentina_2010_prov = as.numeric(colnames(read_xls("poblacion.xls", sheet= "01-TOTAL DEL PAÍS",range = "B6:D6", col_names = T)))
+sheets = readxl::excel_sheets("poblacion.xls")
+total_argentina_2010_prov = as.numeric(colnames(read_xls("poblacion.xls", sheet= sheets[2],range = "B6:D6", col_names = T)))
 names(total_argentina_2010_prov) = c("Ambos sexos","Varones","Mujeres")
 
 total_argentina_2010_depto = c(ambos_sexos=sum(proyecciones_depto$a_2010[proyecciones_depto$sexo_nombre=="Ambos sexos"]),
@@ -199,9 +198,19 @@ total_argentina_2010_depto == total_argentina_2010_prov
 
 proyecciones_depto = as.data.frame(proyecciones_depto)
 
-proyecciones_depto$juri_nombre[proyecciones_depto$juri_nombre=="Tierra del Fuego, Antártida e Islas del Atlántico Sur"] = "Tierra del Fuego"
-proyecciones_depto$departamento_nombre[proyecciones_depto$departamento_nombre=="Ñorquincó"] = "Ñorquinco"
+# proyecciones_depto$juri_nombre[proyecciones_depto$juri_nombre=="Tierra del Fuego, Antártida e Islas del Atlántico Sur"] = "Tierra del Fuego"
+# proyecciones_depto$departamento_nombre[proyecciones_depto$departamento_nombre=="Ñorquincó"] = "Ñorquinco"
 
 proyecciones_depto = left_join(proyecciones_depto,codigos, by = c("juri_nombre","departamento_nombre"))
 
 proyecciones_depto[is.na(proyecciones_depto$departamento_codigo),]
+
+proyecciones_depto$sexo_codigo = ""
+proyecciones_depto$sexo_codigo[proyecciones_depto$sexo_nombre == "Ambos sexos"] = "0"
+proyecciones_depto$sexo_codigo[proyecciones_depto$sexo_nombre == "Varones"] = "1"
+proyecciones_depto$sexo_codigo[proyecciones_depto$sexo_nombre == "Mujeres"] = "2"
+
+proyecciones_depto = proyecciones_depto[,c(20,1,21,2,22,3,4:19)]
+
+colnames(proyecciones_depto)
+
