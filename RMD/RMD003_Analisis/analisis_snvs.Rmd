@@ -54,7 +54,8 @@ instalar("sf")
 instalar("tmap")
 instalar("leaflet")
 instalar("DT")
-
+instalar("classInt")
+instalar("ggspatial")
 ```
 
 # Lectura de los datos 
@@ -611,21 +612,80 @@ ggplot(data = mapa_arg) +
 
 
 Unimos tabla de tasas con mapa.
+
 ```{r message=FALSE, warning=FALSE}
-
 tasas$jurisdiccion <- car::recode(tasas$jurisdiccion,"'CABA'='Ciudad de Buenos Aires'")
-table(mapa_arg$NAME_1)
 
-mapa_arg <- dplyr::left_join(mapa_arg, tasas, by = c("NAME_1"="jurisdiccion"))
+tasas2 <- tasas %>% gather("ano","tasa", 5:6)
+mapa_arg <- dplyr::left_join(mapa_arg, tasas2, by = c("NAME_1"="jurisdiccion"))
+mapa_arg2 <- dplyr::left_join(mapa_arg, tasas, by = c("NAME_1"="jurisdiccion"))
 ```
 
 
 ```{r message=FALSE, warning=FALSE}
 tmap_mode("view")
-tm_shape(mapa_arg) +
+tm_shape(mapa_arg2) +
     tm_polygons(c("2018", "2020"), n=4, style="jenks") +
     tm_facets(sync = TRUE, ncol = 2)
 ```
 
 
+## Alternativa segundo mapa utilizando ggplot.
+
+```{r message=FALSE, warning=FALSE}
+breaks_qt <- classIntervals(
+  c(min(mapa_arg$tasa) - .00001,mapa_arg$tasa), n = 4, style = "quantile", dataPrecision = 1)
+
+mapaProv_sf_tasa <- mutate(mapa_arg,
+                           Tasas = cut(mapa_arg$tasa, breaks_qt$brks)) 
+mapa_pais <- ggplot(mapaProv_sf_tasa %>% filter(ano>=2013)) +## si tengo una serie de tiempo  
+  geom_sf(aes(fill=Tasas)) +
+  scale_fill_brewer(palette = "BuPu", na.value="grey") +## elijo la paleta de colores
+  facet_wrap(~ ano, nrow=1)+
+  annotation_scale()+
+  scale_x_continuous(breaks = seq(-75, -50, by = 10))+
+  ggtitle("Tasas de notificación de Sífilis, periodo 2018-2020, Argentina")+
+  labs(fill="Tasa de notificación de Sífilis:")+
+  coord_sf(crs = "+proj=tmerc +lat_0=-90 +lon_0=-66 +k=1 +x_0=3500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")+
+  theme_minimal()+
+  theme(
+    strip.text = element_text(size=13),
+    legend.position = "bottom")+
+  scale_colour_manual(values=NA)
+mapa_pais
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+##solo caba################
+
+mapaProv_sf <-  sf::st_read("C:/Users/velen/OneDrive/Documentos/IECS CIIPS/untref2023/RMD/RMD003_Analisis/datos/mapas/pxpciadatosok.shp")
+
+names(mapaProv_sf)[1] <- "link"
+mapaProv_sf$link2 <- as.numeric(mapaProv_sf$link)
+mapaProv_sf_tasa2 <- inner_join(mapaProv_sf, as.data.frame(mapaProv_sf_tasa[,c(14,15,17,13)]),
+                                by=c("link2"="id_jurisdiccion"))
+
+mapa_caba <- ggplot(mapaProv_sf_tasa2) + 
+  geom_sf(aes(fill=Tasas)) +
+  scale_fill_brewer(palette = "BuPu", na.value= "white") +
+  facet_wrap(~ ano, nrow=1)+
+  annotation_scale()+
+  #coord_sf(crs = st_crs(4326))+
+  ggtitle("Puedo agregar un título")+
+  labs(fill="Tasa de notificación de Sífilis")+
+  coord_sf(xlim = c(-58.7,-58.2), ylim = c( -34.8,-34.4), expand = T) +
+  theme_minimal()+
+  theme(
+    strip.text = element_text(size=13),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank())
+
+mapa_caba
+```
+
+```{r}
+##ggpubr::ggarrange(mapa_pais, mapa_caba, ncol=2)
+```
 
