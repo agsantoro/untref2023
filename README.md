@@ -111,6 +111,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 [Analisis de Eventos de Notificación Obligatoria](https://agsantoro.github.io/untref2023/RMD/RMD003_Analisis/analisis_snvs.html)
 
+### Materiales CLASE 3
+[Procesamiento de datos de mortalidad y cálculo de tasas en lote](https://agsantoro.github.io/untref2023/RMD/RMD005_tasas/RMD005_tasas.html)
 
 ### Bibliografía
 

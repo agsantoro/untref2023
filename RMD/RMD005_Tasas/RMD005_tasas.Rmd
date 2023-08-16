@@ -28,21 +28,26 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introducción
 
-Las tasas crudas, específicas y ajustadas de mortalidad son dos de los indicadores más utilizados en epidemiología. Sirven para hacer comparaciones entre diferentes poblaciones y series temporales.
+Las tasas crudas y ajustadas de mortalidad son dos de los indicadores más utilizados en epidemiología. Sirven para hacer comparaciones entre diferentes poblaciones y series temporales.
 
-El procedimiento para el cálculo de tasas de mortalidad es sencillo, sin embargo, al tener denominador y numerador fuentes de información distintas, requiere habitualmente el cumplimiento de ciertos pasos: obtención de la información, adaptación de los formatos, homologación de categorías, etc. Estas tareas suelen ser tediosas y aumentan la probabilidad de cometer errores. Por otro lado, cuando los cálculos deben hacerse para una multiplicidad de áreas geográficas o años, suelen ser poco eficientes. 
+El procedimiento para el cálculo de tasas de mortalidad es sencillo, sin embargo, al tener denominador y numerador fuentes de información distintas, requiere habitualmente el cumplimiento de ciertos pasos: obtención de la información, adaptación de los formatos, homologación de categorías, etc. Estas tareas suelen ser tediosas y aumentan la probabilidad de cometer errores. Por otro lado, cuando los cálculos deben hacerse para múltiples de áreas geográficas o períodos de tiempo, suelen ser poco eficientes. 
+
+&nbsp;
 
 ## Objetivo
 
-El objetivo de este documento es presentar una forma programática cálculo de tasas de mortalidad por año, jurisdicción, sexo y causa para Argentina en el período 2010-2021.
+El objetivo de este documento es presentar una forma programática en R [@R-base] para el cálculo de tasas de mortalidad por año, jurisdicción y sexo para Argentina en el período 2010-2021.
+
+&nbsp;
 
 ## Desarrollo
+Para el desarrollo de esta actividad se utilizarán las librerías dplyr [@dplyr],epitools [@epitools],readr [@readr] y DT [@DT].
 
 ### 1- Descarga de los datos
 
-En el portal de Datos Abiertos se encuentra disponible un dataset de defunciones ocurridas y registradas en Argentina para el período 2005-2021. En este archivo las muertes están clasificadas por una serie de variables y en la columna "cantidad" presenta una cuenta de defunciones para la combinación de categorías de cada fila.
+En el portal de [Datos Abiertos](http://datos.salud.gob.ar/) se encuentra disponible un dataset de defunciones ocurridas y registradas en Argentina para el período 2005-2021. En este archivo las muertes están clasificadas por una serie de variables y en la columna "cantidad" presenta una cuenta de defunciones para la combinación de categorías de cada fila.
 
-Descargamos el archivo.
+Descargamos el archivo y creamos el data frame "defunciones".
 
 ```{r message=FALSE, warning=FALSE}
 library(dplyr)
@@ -63,7 +68,6 @@ defunciones = defunciones[defunciones$anio >= 2010,]
 str(defunciones)
 
 # eliminamos las variables cie10_causa_id, muerte_materna_id y muerte_materna_clasificacion que no vamos a usar
-
 defunciones$cie10_causa_id = NULL
 defunciones$cie10_clasificacion = NULL
 defunciones$muerte_materna_id = NULL
@@ -116,18 +120,18 @@ unique(defunciones$grupo_edad)
 ```
 La única diferencia observada es que en el archivo de defunciones tenemos muertes de edad sin especificar, mientras que en las proyecciones de población naturalmente esta categoría no existe.
 
-Finalmente agregamos el dataset de poblaciones que reducir las filas
+
+Sumarizamos el dataset de poblaciones que reducir las filas
 
 ```{r message=FALSE, warning=FALSE}
-library("dplyr")
-poblacion$X = NULL
+
 poblacion = poblacion %>% group_by(ano,juri,juri_nombre,sexo_codigo,sexo_nombre,edad) %>% summarise(poblacion=sum(poblacion))
 colnames(poblacion)
 ```
 
 ### 4- Cálculo de tasas de mortalidad
 
-En primer lugar vamos a seleccionar y renombrar columnas del data frame de defunciones para que los nombres de las columnas coincidad en ambas fuentes.
+En primer lugar vamos a seleccionar y renombrar columnas del data frame de defunciones para que los nombres de las columnas coincidan en ambas fuentes.
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -171,7 +175,8 @@ defunciones = left_join(grid,defunciones)
 defunciones[is.na(defunciones)] = 0
 
 # agrupamos para volver a sumarizar la tabla luego de todos los cambios
-defunciones = defunciones %>% group_by(ano,juri,sexo_codigo,edad) %>% summarise(cantidad=sum(cantidad))
+defunciones = defunciones %>% group_by(ano,juri,sexo_codigo,edad) %>% 
+                              summarise(cantidad=sum(cantidad))
 
 
 ```
@@ -181,38 +186,46 @@ Ahora vamos a realizar un loop para ir recorriendo cada año, jurisdicción y se
 ```{r message=FALSE, warning=FALSE}
 library(epitools)
 
+# convertimos las variables de código en numéricas para que puedan vincularse sin problema
 poblacion$juri = as.numeric(poblacion$juri)
 poblacion$sexo_codigo = as.numeric(poblacion$sexo_codigo)
 
+# definimos la población total de Argentina en 2020 como población standard
 poblacion_standard = poblacion$poblacion[poblacion$ano=="2020" &
                                            poblacion$sexo_nombre=="Ambos sexos" &
                                            poblacion$juri=="1"]
 
+# creamos un data frame vacío donde se van a ir agregando los indicadores calculados
 tasas_resultado = data.frame()
 
-for (a in unique(defunciones$ano)) {
-  for (j in unique(defunciones$juri[defunciones$juri %in% 1:94])) {
-    for (s in 0:2) {
+for (a in unique(defunciones$ano)) { # recorremos los años
+  for (j in unique(defunciones$juri[defunciones$juri %in% 1:94])) { # dentro de cada jurisdicción, recorremos las jurisdicciones
+    for (s in 0:2) { #dentro de cada jurisdicción, recorremos las categorías de sexo
       def_data = defunciones[defunciones$ano == a &
-                               defunciones$juri == j &
-                               defunciones$sexo_codigo == s,] %>% left_join(poblacion)
+                             defunciones$juri == j &
+                             defunciones$sexo_codigo == s,] %>% left_join(poblacion) # creamos un data frame con la información del año / jurisdicción / sexo activos
       
-      defunciones_n = sum(def_data$cantidad)
-      tasa_cruda = sum(def_data$cantidad)/sum(def_data$poblacion[is.na(def_data$poblacion)==F]) * 100000
+      defunciones_n = sum(def_data$cantidad) # calculamos el total de defunciones
+      tasa_cruda = sum(def_data$cantidad)/sum(def_data$poblacion[is.na(def_data$poblacion)==F]) * 100000 # calculamos la tasa cruda
       
-      def_data = def_data[def_data$edad!="06.Sin especificar",]
+      def_data = def_data[def_data$edad!="06.Sin especificar",] # eliminamos la fila de edad sin especificar para cumplir con el modelo de datos que utliza la librería epitools
       
-      ano = first(def_data$ano)
-      juri_codigo = first(def_data$juri)
-      juri_nombre = first(def_data$juri_nombre)
-      sexo_codigo = first(def_data$sexo_codigo)
-      sexo_nombre = first(def_data$sexo_nombre)
+      # ahora creamos el dataset para anexar en esta vuelta del lopp
+      ano = first(def_data$ano) # año
+      juri_codigo = first(def_data$juri) # código de la jurisdicción
+      juri_nombre = first(def_data$juri_nombre) # nombre de la jurisdicción
+      sexo_codigo = first(def_data$sexo_codigo) # código de sexo
+      sexo_nombre = first(def_data$sexo_nombre) # nombre de sexo
+      
+      # usamos la función ageadjust.direct para ajustar las tasas
       tasas = epitools::ageadjust.direct(
-        count = def_data$cantidad,
-        pop = def_data$poblacion,
-        stdpop = poblacion_standard,
-        conf.level = .95
+        count = def_data$cantidad, # en count se indica la cantidad de defunciones
+        pop = def_data$poblacion, # en pop la población
+        stdpop = poblacion_standard, # en stdpop la población utilizada como standard
+        conf.level = .95 # en conf.level el nivel de confianza seleccionado para la estimación de los intervalos de confianza
       ) *100000
+      
+      # ordenamos todos los resultados en un data frame y lo añadimos a resultados
       
       append = data.frame(
         ano,
@@ -239,6 +252,13 @@ for (a in unique(defunciones$ano)) {
 }
 
 
+```
+
+Visualizamos los resultados
+
+```{r}
+library(DT)
+DT::datatable(tasas_resultado, rownames = F)
 ```
 
 
