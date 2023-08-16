@@ -1,2 +1,38 @@
-url = "http://datos.salud.gob.ar/dataset/27c588e8-43d0-411a-a40c-7ecc563c2c9f/resource/fab9e990-865c-43c4-a643-3dbc3b70a934/download/defunciones-ocurridas-y-registradas-en-la-republica-argentina-anos-2005-2021.csv"
-download.file(url, destfile = "defunciones.csv")
+poblacion$juri = as.numeric(poblacion$juri)
+poblacion$sexo_codigo = as.numeric(poblacion$sexo_codigo)
+
+poblacion_standard = poblacion$poblacion[poblacion$ano=="2020" &
+                                         poblacion$sexo_nombre=="Ambos sexos" &
+                                         poblacion$juri=="1"]
+
+tasas = data.frame()
+
+for (a in unique(defunciones$ano)) {
+  for (j in unique(defunciones$juri)) {
+    for (s in unique(defunciones$sexo_codigo)) {
+      browser()
+      def_data = defunciones[defunciones$ano == a &
+                             defunciones$juri == j &
+                             defunciones$sexo_codigo == 2 &
+                             defunciones$edad!="06.Sin especificar",] %>% left_join(poblacion)
+      
+      def_data
+      ano = first(def_data$ano)
+      juri_codigo = first(def_data$juri)
+      juri_nombre = first(def_data$juri_nombre)
+      
+      sexo = first(def_data$sexo_nombre)
+      tasas = epitools::ageadjust.direct(
+        count = def_data$cantidad,
+        pop = def_data$poblacion,
+        stdpop = poblacion_standard,
+        conf.level = .95
+        
+      ) *100000
+      
+    }
+  }  
+}
+
+
+
