@@ -52,9 +52,13 @@ Descargamos el archivo y creamos el data frame "defunciones".
 ```{r message=FALSE, warning=FALSE}
 library(dplyr)
 options(timeout=1000000) # incrementamos el timeout debido a que la descarga es lenta
-# url = "http://datos.salud.gob.ar/dataset/27c588e8-43d0-411a-a40c-7ecc563c2c9f/resource/fab9e990-865c-43c4-a643-3dbc3b70a934/download/defunciones-ocurridas-y-registradas-en-la-republica-argentina-anos-2005-2021.csv"
-# download.file(url, destfile = "defunciones.csv")
+
+url = "http://datos.salud.gob.ar/dataset/27c588e8-43d0-411a-a40c-7ecc563c2c9f/resource/fab9e990-865c-43c4-a643-3dbc3b70a934/download/defunciones-ocurridas-y-registradas-en-la-republica-argentina-anos-2005-2021.csv"
+
+download.file(url, destfile = "defunciones.csv")
+
 defunciones = read.csv("defunciones.csv", encoding = "latin1")
+unlink("defunciones.csv")
 ```
 
 ### 2- Procesamiento de la información de mortalidad
