@@ -28,9 +28,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introducción
 
-Las tasas crudas y ajustadas de mortalidad son dos de los indicadores más utilizados en epidemiología. Sirven para hacer comparaciones entre diferentes poblaciones y series temporales.
+Las tasas crudas y ajustadas de mortalidad son dos de los indicadores más utilizados en epidemiología. Sirven para hacer comparaciones entre diferentes poblaciones y períodos de tiempo.
 
-El procedimiento para el cálculo de tasas de mortalidad es sencillo, sin embargo, al tener denominador y numerador fuentes de información distintas, requiere habitualmente el cumplimiento de ciertos pasos: obtención de la información, adaptación de los formatos, homologación de categorías, etc. Estas tareas suelen ser tediosas y aumentan la probabilidad de cometer errores. Por otro lado, cuando los cálculos deben hacerse para múltiples de áreas geográficas o períodos de tiempo, suelen ser poco eficientes. 
+El procedimiento para el cálculo de tasas de mortalidad es sencillo, sin embargo, al tener denominador y numerador fuentes de información distintas, requiere habitualmente el cumplimiento de ciertos pasos: obtención de la información, adaptación de los formatos, homologación de categorías, etc. Estas tareas suelen ser tediosas y aumentan la probabilidad de cometer errores. Por otro lado, cuando los cálculos deben hacerse para múltiples áreas geográficas o períodos de tiempo, suelen ser poco eficientes. 
 
 &nbsp;
 
@@ -265,5 +265,8 @@ library(DT)
 DT::datatable(tasas_resultado, rownames = F)
 ```
 
+&nbsp;
 
+&nbsp;
 
+## Referencias
