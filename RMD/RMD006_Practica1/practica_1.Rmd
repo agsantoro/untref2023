@@ -182,7 +182,6 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-
-Ejemplo del objetivo:
+## Ejemplo del objetivo:
 
 ![captura1](images/Captura1.png)
