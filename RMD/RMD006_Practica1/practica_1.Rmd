@@ -30,7 +30,7 @@ klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_suc
 
 En esta oprtunidad les proponemos utilizar el dataset de Tasas de Mortalidad Infantil (TMI) disponible en [datos abiertos](https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil) para elaborar un app en Shiny. Queremos que la app muestre un gráfico realizado con el paquete *highcharter* y que permita seleccionar la o las provincias que quiero visualizar en el gráfico desde un panel lateral con una caja de selección multiple. 
 
-## Lectura y dedos y procesamiento del dataset
+## Lectura del dataset
 
 Para que puedan generar esta visualización les compartimos un avance de este trabajo. 
 
