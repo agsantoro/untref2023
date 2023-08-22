@@ -19,6 +19,7 @@
     - [Materiales CLASE 1](#materiales-clase-1)
     - [Materiales CLASE 2](#materiales-clase-2)
     - [Materiales CLASE 3](#materiales-clase-3)
+    - [Materiales CLASE 4](#materiales-clase-4)
     - [Bibliografía](#bibliografía)
     - [Enlaces útiles](#enlaces-útiles)
 
@@ -116,7 +117,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 [Procesamiento de datos de mortalidad y cálculo de tasas en lote](https://agsantoro.github.io/untref2023/RMD/RMD005_Tasas/RMD005_tasas.html)
 
 ### Materiales CLASE 4
-[Practica en shiny 1](https://agsantoro.github.io/untref2023/RMD/RMD005_Practica1/practica_1.html)
+[Practica en shiny 1](https://agsantoro.github.io/untref2023/RMD/RMD006_Practica1/practica_1.html)
 
 
 ### Bibliografía
