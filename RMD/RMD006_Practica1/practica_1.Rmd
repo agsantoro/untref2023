@@ -77,7 +77,7 @@ bd <- data %>% pivot_longer(
     ano = year(ymd(indice_tiempo)),
     indice_tiempo = ymd(indice_tiempo),
     prov=case_when(prov == "cordoba" ~ str_to_title(prov),
-                   prov == "caba" ~ str_to_title(prov),
+                   prov == "caba"  ~ "CABA",
                    prov == "argentina" ~ str_to_title(prov),
                    prov == "corientes" ~ str_to_title(prov),
                    prov == "chaco" ~ str_to_title(prov),
