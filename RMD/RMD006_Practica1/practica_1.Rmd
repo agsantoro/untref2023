@@ -8,7 +8,7 @@ output:
     toc_float:
       collapsed: false
 ---
-![](images/logo.jpeg)
+![](images/logo.jpeg){width=30%}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
