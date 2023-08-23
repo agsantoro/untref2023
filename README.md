@@ -134,6 +134,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 [Highcharts for R users](https://www.highcharts.com/blog/tutorials/highcharts-for-r-users/)
 
 [Google Sheet de la clase](https://docs.google.com/spreadsheets/d/1tZcvm0YulT59IU41TaZJGcwQ6iVRjpaYuxCTH3YQE_Q/edit#gid=0)
+
 [shiny:: CHEAT SHEET Descarga](https://github.com/rstudio/cheatsheets/raw/main/shiny.pdf)
 
 
