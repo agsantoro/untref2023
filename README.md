@@ -116,7 +116,11 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 ### Materiales CLASE 3
 [Procesamiento de datos de mortalidad y cálculo de tasas en lote](https://agsantoro.github.io/untref2023/RMD/RMD005_Tasas/RMD005_tasas.html)
 
+[Grabación clase 3](https://drive.google.com/file/d/1FAyyaD-QBgcEt3Z7tqNKqueq2LcDo-rD/view?usp=sharing)
+
 ### Materiales CLASE 4
+[PPT3](https://agsantoro.github.io/untref2023/PPT/ppt3.html)
+
 [Practica en shiny 1](https://agsantoro.github.io/untref2023/RMD/RMD006_Practica1/practica_1.html)
 
 
