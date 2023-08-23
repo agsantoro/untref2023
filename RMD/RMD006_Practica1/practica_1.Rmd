@@ -29,7 +29,9 @@ klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_suc
 
 
 
-En esta oprtunidad les proponemos utilizar el dataset de Tasas de Mortalidad Infantil (TMI) disponible en [datos abiertos](https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil) para elaborar un app en Shiny `r emoji::emoji("frog")`. Queremos que la app muestre un gráfico realizado con el paquete *highcharter* y que permita seleccionar la o las provincias que quiero visualizar en el gráfico desde un panel lateral con una caja de selección multiple. 
+En esta oprtunidad les proponemos utilizar el dataset de Tasas de Mortalidad Infantil (TMI) disponible en [datos abiertos](https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil) para elaborar un app en Shiny `r emoji::emoji("frog")`. Queremos que la app muestre un gráfico realizado con el paquete *highcharter*  y que permita seleccionar la o las provincias que quiero visualizar en el gráfico desde un panel lateral con una caja de selección múltiple. 
+
+![Captura de la app para practica 1](images/Captura1.png){width=60%}
 
 ## Lectura del dataset
 
@@ -114,7 +116,7 @@ El código a continuación contienen un ejemplo de como pueden amar el gráfico 
 
 `r emoji::emoji("pushpin")`Cuando trabajen con la app de Shiny este vector deberá ser remplazado por las provincias que se seleccionen en la caja del panel lateral. 
  
-`r emoji::emoji("point_down")`Al final podrán ver una imagen con un ejemplo del objetivo al que queremos llegar`r emoji::emoji("point_down")` 
+`r emoji::emoji("point_down")`Al final podrán ver un ejemplo del objetivo al que queremos llegar`r emoji::emoji("point_down")` 
 
 ```{r}
 # defino que provincias quiero incluir en la lista a continuación
@@ -164,7 +166,6 @@ Recuerden que el paquete *highcharter* tiene las funciones especificas de
         highchartOutput() ## para el UI
         renderHighchart() ## para el server
         
-        
 Estructura de la app:
 
 ```{r eval=FALSE}
@@ -188,5 +189,10 @@ shinyApp(ui = ui, server = server)
 
 ## Ejemplo del objetivo
 
-![Captura de la app para practica 1](images/Captura1.png)
-Buena suerte`r emoji::emoji("four_leaf_clover")` 
+```{r echo=FALSE}
+webshot::install_phantomjs()
+knitr::include_app("https://velenpennini.shinyapps.io/practica1/", height = 650)
+
+```
+`r emoji::emoji("four_leaf_clover")`Buena suerte`r emoji::emoji("four_leaf_clover")` 
+
