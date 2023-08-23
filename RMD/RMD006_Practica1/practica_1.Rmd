@@ -8,6 +8,7 @@ output:
     toc_float:
       collapsed: false
 ---
+![](images/logo.jpeg)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -28,7 +29,7 @@ klippy::klippy(color = 'darkred', tooltip_message = 'Click to copy', tooltip_suc
 
 
 
-En esta oprtunidad les proponemos utilizar el dataset de Tasas de Mortalidad Infantil (TMI) disponible en [datos abiertos](https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil) para elaborar un app en Shiny. Queremos que la app muestre un gráfico realizado con el paquete *highcharter* y que permita seleccionar la o las provincias que quiero visualizar en el gráfico desde un panel lateral con una caja de selección multiple. 
+En esta oprtunidad les proponemos utilizar el dataset de Tasas de Mortalidad Infantil (TMI) disponible en [datos abiertos](https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil) para elaborar un app en Shiny `r emoji::emoji("frog")`. Queremos que la app muestre un gráfico realizado con el paquete *highcharter* y que permita seleccionar la o las provincias que quiero visualizar en el gráfico desde un panel lateral con una caja de selección multiple. 
 
 ## Lectura del dataset
 
@@ -61,8 +62,8 @@ DT::datatable(data)
 
 ## Procesamiento de los datos
 
-Copiando el código a continuación podrán procesar los datos de modo que queden listos para graficarlos!
-Recuerden que pueden dejar el código para el procesamiento en el mismo .R de la app.
+Copiando el código a continuación podrán procesar los datos de modo que queden listos para graficarlos`r emoji::emoji("muscle")`. 
+Recuerden que pueden dejar el código para el procesamiento en el mismo *.R* de la app.
 
 ```{r procesamiento}
 ###proceso los datos para graficar
@@ -109,8 +110,11 @@ DT::datatable(bd)
 
 ## Grafico en *highcharter*
 
-El código a continuación contienen un ejemplo de como pueden programar el gráfico para incluir en la app de Shiny. 
-En la primer linea se define un vector con las provincias que quiero incorporar para realizar el gráfico. Cuando trabajen con la app de Shiny este vector deberá ser remplazado por las provincias que se seleccionen en la caja del panel lateral. Al fina podrán ver una imagen con un ejemplo del objetivo al que queremos llegar. 
+El código a continuación contienen un ejemplo de como pueden amar el gráfico que luego tendrán que incluir en su app de Shiny. En la primer linea se define un vector con las provincias que quiero incorporar para realizar el gráfico. 
+
+`r emoji::emoji("pushpin")`Cuando trabajen con la app de Shiny este vector deberá ser remplazado por las provincias que se seleccionen en la caja del panel lateral. 
+ 
+`r emoji::emoji("point_down")`Al final podrán ver una imagen con un ejemplo del objetivo al que queremos llegar`r emoji::emoji("point_down")` 
 
 ```{r}
 # defino que provincias quiero incluir en la lista a continuación
@@ -150,11 +154,11 @@ hc
 
 ```
 
-## Desafío
+## `r emoji::emoji("hatching_chick")` Primer desafío
 
-Por último los desafiamos a armar la Shinyapp!
+Por último, los desafiamos a armar la Shinyapp`r emoji::emoji("exclamation")`
 Le dejamos a continuación la estructura.
-y recuerden que el paquete *highcharter* tiene las funciones especificas de 
+Recuerden que el paquete *highcharter* tiene las funciones especificas de 
       
         
         highchartOutput() ## para el UI
@@ -185,3 +189,4 @@ shinyApp(ui = ui, server = server)
 ## Ejemplo del objetivo
 
 ![Captura de la app para practica 1](images/Captura1.png)
+Buena suerte`r emoji::emoji("four_leaf_clover")` 
