@@ -123,6 +123,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 [Practica en shiny 1](https://agsantoro.github.io/untref2023/RMD/RMD006_Practica1/practica_1.html)
 
+[Grabación clase 4](https://drive.google.com/file/d/13t-PJ7m14ewaOJKyMTA7cFNkvIbIMM69/view)
+
 
 ### Bibliografía
 
