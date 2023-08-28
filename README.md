@@ -97,7 +97,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 ### Tutoriales
 
-[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
+[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD002Tutorial/Tutorial1.html)
 
 [Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
 
