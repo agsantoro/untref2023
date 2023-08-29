@@ -1,5 +1,5 @@
 ---
-title: "Tutorial 2 - deploy de una shinny app"
+title: "Tutorial 2 - Despliegue de una ShinnyApp"
 date: "`r Sys.Date()`"
 output: 
   html_document:
