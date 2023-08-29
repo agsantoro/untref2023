@@ -7,7 +7,6 @@
 #
 
 ##cargo los paquetes que voy a usar
-####
 
 library(shiny)
 library(tidyverse)
@@ -16,6 +15,9 @@ library(lubridate)
 library(plotly)
 library(shinyWidgets)
 library(highcharter)
+library(gt)
+library(gtExtras)
+library(sparkline)
 
 #descargo el dataset 
 temp <- tempfile()
@@ -64,6 +66,10 @@ bd <- data %>% pivot_longer(
     )
   ) 
 unique(bd$prov)
+names(bd)
+
+
+
 # Defino UI para mi aplicación
 ui <- fluidPage(
   # Titulo
@@ -98,12 +104,20 @@ ui <- fluidPage(
   
   
   # Muestro el gráfico
-  mainPanel( highchartOutput("Plot"))
+  mainPanel( highchartOutput("Plot"),
+             br(),
+             br(),
+             gt_output(outputId = "table"))
   ))
 
 
 # Defino server
 server <- function(input, output) {
+  
+  bd_r <- reactive({
+   filter(bd,prov %in% input$provincia)
+    
+  })
   
   output$Plot <- renderHighchart({
     # armo el grafico con highchart
@@ -116,7 +130,7 @@ server <- function(input, output) {
         enabled = TRUE, text = "Fuente: Datos abiertos/DEIS", href = "https://datos.gob.ar/dataset/salud-tasa-mortalidad-infantil", style = list(fontSize = "12px")
       ) %>% 
       hc_exporting(enabled = TRUE) # enable exporting option
-    bd <- bd %>% filter(prov %in% input$provincia )
+    bd <- bd_r() 
     niveles_prov <- unique(bd$prov)
     # Agrega una serie de datos para cada nivel de "prov"
     for (nivel in niveles_prov) {
@@ -128,6 +142,70 @@ server <- function(input, output) {
     print(hc)
     
   })
+  
+  output$table <- render_gt({
+    gt_tbl <-
+      bd_r()%>% 
+      select(-indice_tiempo) %>% 
+      mutate(Jurisdicción=prov) %>% 
+      dplyr::group_by(Jurisdicción) %>%
+      dplyr::summarize(
+        `Año 1990`=TMI[ano==1990],
+        `Año 2021`=TMI[ano==2021],
+        `Cambio %`= round((`Año 2021`-`Año 1990`)/`Año 2021`*100,1),
+        Tendencia = list(TMI),
+        .groups = "drop") %>%
+      
+      arrange(desc(`Año 2021`)) %>%
+      gt() %>%
+      gt_plt_sparkline(Tendencia,
+                       type="shaded",
+                       label=F,
+                       fig_dim = c(10,30),
+                       same_limit = F
+      ) %>% 
+      data_color( # Update cell colors...
+        columns = c(`Año 2021`), # ...for Mass column 
+        colors = scales::col_numeric( # <- bc it's numeric
+          palette = c(
+            "yellow", "orange", "red"), # A color scheme (gradient)
+          domain = c(4, 11.7) # Column scale endpoints
+        )  ) %>% 
+      tab_spanner(
+        label = "Años",
+        columns = 2:3
+      ) %>% 
+      tab_header(
+        title = "Tendencia en la mortalidad infantil",
+        subtitle = "Por provincia periodo 1990-2021 (cada 1000 nacidos vivos)"
+      ) %>% 
+      tab_options(
+        heading.subtitle.font.size = 12,
+        heading.align = "left",
+        table.border.top.color = "black",
+        column_labels.border.bottom.color = "black",
+        column_labels.border.bottom.width= px(3)
+      ) %>% 
+      gt_highlight_rows(
+        rows = Jurisdicción=="Argentina", 
+        fill = "lightgrey",
+        bold_target_only = TRUE,
+        target_col = Jurisdicción
+      ) %>% 
+      opt_interactive(
+        use_search = TRUE,
+        use_resizers = TRUE,
+        use_highlight = TRUE,
+        use_compact_mode = T,
+        use_text_wrapping = FALSE,
+        page_size_default= 25
+      )
+    
+    gt_tbl
+    
+  })
+
+  
 }
 
 # Corro la application
