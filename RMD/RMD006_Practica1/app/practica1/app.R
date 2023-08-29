@@ -18,6 +18,7 @@ library(highcharter)
 library(gt)
 library(gtExtras)
 library(sparkline)
+library(svglite)
 
 #descargo el dataset 
 temp <- tempfile()
@@ -152,7 +153,7 @@ server <- function(input, output) {
       dplyr::summarize(
         `Año 1990`=TMI[ano==1990],
         `Año 2021`=TMI[ano==2021],
-        `Cambio %`= round((`Año 2021`-`Año 1990`)/`Año 2021`*100,1),
+        `Cambio %`= round((`Año 2021`-`Año 1990`)/`Año 1990`*100,1),
         Tendencia = list(TMI),
         .groups = "drop") %>%
       
