@@ -20,6 +20,7 @@
     - [Materiales CLASE 2](#materiales-clase-2)
     - [Materiales CLASE 3](#materiales-clase-3)
     - [Materiales CLASE 4](#materiales-clase-4)
+    - [Materiales CLASE 5](#materiales-clase-5)
     - [Bibliografía](#bibliografía)
     - [Enlaces útiles](#enlaces-útiles)
 
@@ -125,6 +126,9 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 [Grabación clase 4](https://drive.google.com/file/d/13t-PJ7m14ewaOJKyMTA7cFNkvIbIMM69/view)
 
+### Materiales CLASE 5
+
+[Tutorial despliegue ShinnyApps](https://agsantoro.github.io/untref2023/RMD/RMD002Tutorial/Tutorial2.html)
 
 ### Bibliografía
 
