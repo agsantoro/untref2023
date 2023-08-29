@@ -97,7 +97,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 ### Tutoriales
 
-[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD02Tutorial/Tutorial1.html)
+[Tutoriales RStudio y GIT](https://agsantoro.github.io/untref2023/RMD/RMD002Tutorial/Tutorial1.html)
 
 [Campus virtual](https://presenciales.untref.edu.ar/acceso.cgi)
 
@@ -107,7 +107,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
    [PPT2](https://agsantoro.github.io/untref2023/PPT/ppt2.html)
 
 ### Materiales CLASE 2
-[Procesamiento de datos de población (jurisdicciones)](https://agsantoro.github.io/untref2023/RMD/RMD01_Poblacion/01_ProyeccionesDePoblacion.html)
+[Procesamiento de datos de población (jurisdicciones)](https://agsantoro.github.io/untref2023/RMD/RMD001_Poblacion/01_ProyeccionesDePoblacion.html)
 
 [Procesamiento de datos de población (departamentos)](https://agsantoro.github.io/untref2023/RMD/RMD004_Deptos/03_ProyeccionesDepartamentos.html)
 
@@ -123,6 +123,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 [Practica en shiny 1](https://agsantoro.github.io/untref2023/RMD/RMD006_Practica1/practica_1.html)
 
+[Grabación clase 4](https://drive.google.com/file/d/13t-PJ7m14ewaOJKyMTA7cFNkvIbIMM69/view)
+
 
 ### Bibliografía
 
@@ -134,6 +136,7 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 [Highcharts for R users](https://www.highcharts.com/blog/tutorials/highcharts-for-r-users/)
 
 [Google Sheet de la clase](https://docs.google.com/spreadsheets/d/1tZcvm0YulT59IU41TaZJGcwQ6iVRjpaYuxCTH3YQE_Q/edit#gid=0)
+
 [shiny:: CHEAT SHEET Descarga](https://github.com/rstudio/cheatsheets/raw/main/shiny.pdf)
 
 
