@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 En primer lugar, vamos a crearnos una cuenta en [ShinyApps.io](https://www.shinyapps.io/) tal como se señala en las capturas 1 y 2.
 
-[captura1](images/Captura1.PNG)
+![captura1](images/Captura1.PNG)
 
 ![captura2](images/Captura2.PNG)
 
