@@ -130,6 +130,8 @@ El alumno debe cumplimentar el 80% de asistencia a las clases teóricas.
 
 [Tutorial despliegue ShinnyApps](https://agsantoro.github.io/untref2023/RMD/RMD002Tutorial/Tutorial2.html)
 
+[Grabación clase 5](https://drive.google.com/file/d/1CRTpq6H-lcKGLGDsKj-KwNzTNDdxz6Qe/view)
+
 ### Bibliografía
 
 [Lineamientos Básicos para el Análisis de la mortalidad](https://iris.paho.org/bitstream/handle/10665.2/34492/9789275319819-spa.pdf?sequence=7&isAllowed=y)
