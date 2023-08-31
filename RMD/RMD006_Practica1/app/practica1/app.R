@@ -105,16 +105,20 @@ ui <- fluidPage(
   
   
   # Muestro el gráfico
-  mainPanel( highchartOutput("Plot"),
+  mainPanel(
+    # Muestro el gráfico
+    highchartOutput("Plot"),
              br(),
              br(),
-             gt_output(outputId = "table"))
+    # Muestro la tabla
+      gt_output(outputId = "table"))
   ))
 
 
 # Defino server
 server <- function(input, output) {
   
+  #reactive para filtrar la base
   bd_r <- reactive({
    filter(bd,prov %in% input$provincia)
     
@@ -145,6 +149,7 @@ server <- function(input, output) {
   })
   
   output$table <- render_gt({
+    #armo la tabla con los sparklines en gt
     gt_tbl <-
       bd_r()%>% 
       select(-indice_tiempo) %>% 
@@ -188,11 +193,12 @@ server <- function(input, output) {
         column_labels.border.bottom.width= px(3)
       ) %>% 
       gt_highlight_rows(
-        rows = Jurisdicción=="Argentina", 
+        rows = Jurisdicción=="Argentina", # relasto la fila del total pais
         fill = "lightgrey",
         bold_target_only = TRUE,
         target_col = Jurisdicción
       ) %>% 
+      #le agrego la interaccion
       opt_interactive(
         use_search = TRUE,
         use_resizers = TRUE,
@@ -202,7 +208,7 @@ server <- function(input, output) {
         page_size_default= 25
       )
     
-    gt_tbl
+    gt_tbl# el objeto al final del render
     
   })
 
